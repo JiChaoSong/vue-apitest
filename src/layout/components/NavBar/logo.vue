@@ -57,7 +57,6 @@ export default {
       this.listLoading = true
       projectList(this.listQuery).then(res => {
         this.list = res.data.results
-        console.log(this.list)
       })
     },
     handlesetProjects (id, name) {

@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 // import Home from '../views/home/index'
 import System from '../views/system/index'
+import Interface from '../views/apitest/index'
+import TestCase from '../views/testcase/index'
 import Project from '../views/project/index'
 import Layout from '../layout'
 Vue.use(VueRouter)
@@ -50,8 +52,23 @@ export const constantRouterMap = [
       {
         path: 'index',
         name: 'Api',
-        component: () => import(/* webpackChunkName: "about" */ '../views/apitest/index'),
-        meta: { title: '用例管理', activeMenu: '/apitest' }
+        component: Interface,
+        meta: { title: '接口管理', activeMenu: '/apitest' },
+        redirect: '/apitest/index/list',
+        children: [
+          {
+            path: 'list',
+            name: 'ApiList',
+            component: () => import(/* webpackChunkName: "about" */ '../views/apitest/list'),
+            meta: { title: '接口列表', activeMenu: '/apitest' }
+          },
+          {
+            path: 'setapi',
+            name: 'SetApi',
+            component: () => import(/* webpackChunkName: "about" */ '../views/setapitest/index'),
+            meta: { title: '集合测试', activeMenu: '/apitest' }
+          }
+        ]
 
       }
     ],
@@ -66,8 +83,18 @@ export const constantRouterMap = [
       {
         path: 'index',
         name: 'Api',
-        component: () => import(/* webpackChunkName: "about" */ '../views/testcase/index'),
-        meta: { title: '用例管理', activeMenu: '/testcase' }
+        component: TestCase,
+        meta: { title: '用例管理', activeMenu: '/testcase' },
+        redirect: '/testcase/index/case',
+        children: [
+          {
+            path: 'case',
+            name: 'Case',
+            component: () => import(/* webpackChunkName: "about" */ '../views/testcase/case'),
+            meta: { title: '用例列表', activeMenu: '/testcase' }
+          }
+        ]
+
       }
     ],
     meta: { title: '用例管理', activeMenu: '/testcase' }
@@ -96,13 +123,14 @@ export const constantRouterMap = [
             path: 'project',
             name: 'Project',
             component: () => import('../views/project/index'),
-            meta: { title: '产品管理', activeMenu: '/system' }
+            meta: { title: '项目管理', activeMenu: '/system' }
           },
           {
             path: 'module',
             name: 'Module',
             component: () => import('../views/project/components/modules'),
-            meta: { title: '模块管理', activeMenu: '/system' }
+            meta: { title: '模块管理', activeMenu: '/system' },
+            hidden: true
           }
         ],
         meta: { title: '系统管理', activeMenu: '/system' }

@@ -1,0 +1,15 @@
+<template>
+    <div class="">
+      集合测试
+    </div>
+</template>
+
+<script>
+export default {
+  name: 'index'
+}
+</script>
+
+<style scoped>
+
+</style>

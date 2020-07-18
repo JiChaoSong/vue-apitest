@@ -1,14 +1,10 @@
 <template>
-  <div class="apitest-container">
+  <div class="project-container">
     <div class="operation-container">
       <el-button type="primary" icon="el-icon-plus" size="small" @click="handleCreate">
         新增
       </el-button>
-      <el-button type="primary" icon="el-icon-plus" size="small" @click="handleCreate">
-        导入
-      </el-button>
     </div>
-
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -16,15 +12,24 @@
       size="small"
     >
       <el-table-column align="center" label="#" width="65px  " :index="indexMethod" type="index" />
-      <el-table-column label="接口名称" align="center" >
+      <el-table-column label="用例编号" align="center" >
         <template slot-scope="scope">
-<!--          <span @click="handlerowclick(scope.row)">{{scope.row.projectName}}</span>-->
-          {{scope.row.apiName}}
+          {{scope.row.caseNum}}
         </template>
       </el-table-column>
-      <el-table-column label="请求方法" align="center">
+      <el-table-column label="用例名称" align="center">
         <template slot-scope="scope">
-          {{scope.apiMethod}}
+          {{scope.row.caseName}}
+        </template>
+      </el-table-column>
+      <el-table-column label="用例状态" align="center">
+        <template slot-scope="scope">
+          {{scope.row.caseStatus}}
+        </template>
+      </el-table-column>
+      <el-table-column label="所属接口" align="center">
+        <template slot-scope="scope">
+          {{scope.row.interface}}
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center">
@@ -57,14 +62,43 @@
       @current-change="handleCurrentChange"
     />
 
+    <el-dialog :title="titleMap[dialogvisibleTitle]" :visible.sync="dialogvisibleForm" width="800px">
+      <el-form ref="ruleform" :model="projectForm" :rules="projectrule" label-width="100px">
+        <el-form-item label="用例编号:" prop="projectName">
+          <el-input v-model="projectForm.caseNum" placeholder="请输入用例编号"/>
+        </el-form-item>
+        <el-form-item label="用例名称:" prop="projectUrl">
+          <el-input v-model="projectForm.caseName" placeholder="请输入用例名称"/>
+        </el-form-item>
+        <el-form-item label="用例描述:" prop="projectDesc">
+          <el-input
+            v-model="projectForm.caseDesc"
+            type="textarea" placeholder="请输入用例描述"
+            autosize
+            style="width: 400px"
+          />
+        </el-form-item>
+        <el-form-item style="text-align: left">
+          <el-button type="primary" @click="dialogvisibleTitle==='created'?createdProject():updatedProject()">保存</el-button>
+          <el-button @click="handlecancel">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { apiinfoAdd, apiinfoDelete, apiinfoList, apiinfoUpdate } from '../../api/apiinfo'
+import { getUserId } from '../../utils/user'
+import { caseAdd, caseDelete, caseList, caseUpdate } from '../../api/case'
 
 export default {
-  name: 'apitest',
+  name: 'project',
+  inject: ['reload'],
+  computed: {
+    user () {
+      return getUserId()
+    }
+  },
   data () {
     return {
       list: null,
@@ -78,18 +112,27 @@ export default {
       dialogvisibleTitle: null,
       dialogvisibleForm: false,
       titleMap: {
-        updated: '编辑产品',
-        created: '创建产品'
+        updated: '编辑项目',
+        created: '创建项目'
       },
 
       projectForm: {
         id: undefined,
-        projectName: '',
-        projectDesc: ''
+        caseNum: '',
+        caseName: '',
+        caseStatus: '',
+        caseDesc: '',
+        createdUser: this.user,
+        updatedUser: this.user,
+        interface: ''
+
       },
       projectrule: {
-        projectName: [
-          { required: true, message: '请输入产品名称', trigger: 'blur' }
+        caseNum: [
+          { required: true, message: '请输入用例编号', trigger: 'blur' }
+        ],
+        caseName: [
+          { required: true, message: '请输入用例名称', trigger: 'blur' }
         ]
       }
     }
@@ -100,7 +143,7 @@ export default {
   methods: {
     fetchData () {
       this.listLoading = true
-      apiinfoList(this.listQuery).then(res => {
+      caseList(this.listQuery).then(res => {
         this.list = res.data.results
         this.total = res.data.count
         this.listLoading = false
@@ -110,8 +153,13 @@ export default {
     resetprojectform () {
       this.projectForm = {
         id: undefined,
-        projectName: '',
-        projectDesc: ''
+        caseNum: '',
+        caseName: '',
+        caseStatus: '',
+        caseDesc: '',
+        createdUser: this.user,
+        updatedUser: this.user,
+        interface: ''
       }
     },
 
@@ -135,9 +183,10 @@ export default {
     createdProject () {
       this.$refs.ruleform.validate((valid) => {
         if (valid) {
-          apiinfoAdd(this.projectForm).then(_ => {
+          caseAdd(this.projectForm).then(_ => {
             this.dialogvisibleForm = false
             this.fetchData()
+            location.reload()
             this.$notify({
               title: '成功',
               message: '添加成功',
@@ -152,9 +201,10 @@ export default {
       this.$refs.ruleform.validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.projectForm)
-          apiinfoUpdate(tempData.id, tempData).then(_ => {
+          caseUpdate(tempData.id, tempData).then(_ => {
             this.dialogvisibleForm = false
             this.fetchData()
+            location.reload()
             this.$notify({
               title: '成功',
               message: '修改成功',
@@ -172,8 +222,9 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(_ => {
-        apiinfoDelete(row.id).then(res => {
+        caseDelete(row.id).then(res => {
           this.fetchData()
+          location.reload()
           this.$notify({
             title: '成功',
             message: '删除成功',
@@ -209,5 +260,16 @@ export default {
 </script>
 
 <style scoped>
+
+  .el-input{
+    width: 400px;
+  }
+  .project-container {
+
+  }
+  .tag-span {
+    margin:0 20px 0 20px;
+    font-weight: bold;
+  }
 
 </style>

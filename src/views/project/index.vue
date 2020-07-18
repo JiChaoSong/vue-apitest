@@ -12,9 +12,14 @@
       size="small"
     >
       <el-table-column align="center" label="#" width="65px  " :index="indexMethod" type="index" />
-      <el-table-column label="产品名称" align="center" >
+      <el-table-column label="项目名称" align="center" >
         <template slot-scope="scope">
           <span @click="handlerowclick(scope.row)">{{scope.row.projectName}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="项目地址" align="center">
+        <template slot-scope="scope">
+          {{scope.row.projectUrl}}
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center">
@@ -49,13 +54,16 @@
 
     <el-dialog :title="titleMap[dialogvisibleTitle]" :visible.sync="dialogvisibleForm" width="800px">
       <el-form ref="ruleform" :model="projectForm" :rules="projectrule" label-width="100px">
-        <el-form-item label="产品名称:" prop="projectName">
-          <el-input v-model="projectForm.projectName" placeholder="请输入产品名称"/>
+        <el-form-item label="项目名称:" prop="projectName">
+          <el-input v-model="projectForm.projectName" placeholder="请输入项目名称"/>
         </el-form-item>
-        <el-form-item label="产品描述" prop="projectDesc">
+        <el-form-item label="项目地址:" prop="projectUrl">
+          <el-input v-model="projectForm.projectUrl" placeholder="请输入项目地址"/>
+        </el-form-item>
+        <el-form-item label="项目描述:" prop="projectDesc">
           <el-input
             v-model="projectForm.projectDesc"
-            type="textarea" placeholder="请输入产品描述"
+            type="textarea" placeholder="请输入项目描述"
             autosize
             style="width: 400px"
           />
@@ -94,26 +102,30 @@ export default {
       dialogvisibleTitle: null,
       dialogvisibleForm: false,
       titleMap: {
-        updated: '编辑产品',
-        created: '创建产品'
+        updated: '编辑项目',
+        created: '创建项目'
       },
 
       projectForm: {
         id: undefined,
         projectName: '',
         projectDesc: '',
+        projectUrl: '',
+        projectEnv: '',
         user: this.user
       },
       projectrule: {
         projectName: [
-          { required: true, message: '请输入产品名称', trigger: 'blur' }
+          { required: true, message: '请输入项目名称', trigger: 'blur' }
+        ],
+        projectUrl: [
+          { required: true, message: '请输入项目地址', trigger: 'blur' }
         ]
       }
     }
   },
   created () {
     this.fetchData()
-    console.log(this.user)
   },
   methods: {
     fetchData () {
@@ -130,6 +142,8 @@ export default {
         id: undefined,
         projectName: '',
         projectDesc: '',
+        projectUrl: '',
+        projectEnv: '',
         user: this.user
       }
     },
@@ -235,11 +249,8 @@ export default {
   .el-input{
     width: 400px;
   }
-  .project-container >>>div {
-    /*padding: 0 20px 10px 20px;*/
-    /*background-color: white ;*/
-    /*border-radius: 5px;*/
-    /*box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)*/
+  .project-container {
+
   }
   .tag-span {
     margin:0 20px 0 20px;

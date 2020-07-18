@@ -64,6 +64,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'comoninput',
   props: {
@@ -91,6 +92,8 @@ export default {
       assertlist: this.allEnums.asserttype,
       bodylist: this.allEnums.bodytype
     }
+  },
+  created () {
   },
   methods: {
     addline (data) {

@@ -5,7 +5,13 @@
       :data="list"
       stripe
       size="small"
+      :row-style="{height: '20px'}"
+      :cell-style="{padding:'5px'}"
+      :header-cell-style="{'background':'#FAFAFA'}"
+      @selection-change="handleSelectionChange"
+      :max-height="560"
     >
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column align="center" label="#" width="65px  " :index="indexMethod" type="index" />
       <el-table-column label="接口名称" align="center" >
         <template slot-scope="scope">
@@ -33,7 +39,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" width="250px">
+      <el-table-column label="操作" align="center" width="250px" fixed="right">
         <template slot-scope="{row}">
           <el-button type="text" @click="handleUpdate(row)">
             编辑
@@ -47,38 +53,54 @@
 
     <el-pagination
       background
-      layout="prev, pager, next, total"
+      layout="sizes,prev, pager, next, total"
       :total="total"
       @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+      :page-sizes="[10, 20, 50, 100]"
+      :page-size="10"
+      class="page"
     />
 
   </div>
 </template>
 
 <script>
-import { apiinfoAdd, apiinfoDelete, apiinfoList, apiinfoUpdate } from '../../../api/apiinfo'
+import { apiinfoDelete, apiinfoUpdate } from '../../../api/apiinfo'
 
 export default {
   name: 'apilist',
-  // props: {
-  //   handleAdd: {
-  //     type: Function,
-  //     required: true
-  //   }
-  // },
+  props: {
+    list: {
+      type: Array,
+      require: true
+    },
+    total: {
+      type: Number,
+      require: true
+    },
+    listLoading: {
+      type: Boolean,
+      require: true,
+      default: true
+    },
+    listQuery: {
+      type: Object,
+      require: true
+    },
+    fetchData: {
+      type: Function,
+      require: true
+    },
+    addTab: {
+      type: Function,
+      require: true
+    }
+  },
   data () {
     return {
 
       editableTabsValue: '1',
-
-      list: null,
-      listLoading: true,
-      total: 0,
-      listQuery: {
-        page: 1,
-        size: 10
-      },
-
       dialogvisibleTitle: null,
       dialogvisibleForm: false,
       titleMap: {
@@ -95,21 +117,11 @@ export default {
         projectName: [
           { required: true, message: '请输入产品名称', trigger: 'blur' }
         ]
-      }
+      },
+      multipleSelection: []
     }
   },
-  created () {
-    this.fetchData()
-  },
   methods: {
-    fetchData () {
-      this.listLoading = true
-      apiinfoList(this.listQuery).then(res => {
-        this.list = res.data.results
-        this.total = res.data.count
-        this.listLoading = false
-      })
-    },
 
     resetprojectform () {
       this.projectForm = {
@@ -119,38 +131,15 @@ export default {
       }
     },
 
-    handleCreate () {
-      this.resetprojectform()
-      this.dialogvisibleTitle = 'created'
-      this.dialogvisibleForm = true
-      this.$nextTick(() => {
-        this.$refs.ruleform.clearValidate()
-      })
-    },
     handleUpdate (row) {
       this.projectForm = Object.assign({}, row)
+      this.addTab(this.editableTabsValue, row)
+      this.$emit('getdata', this.projectForm)
       this.dialogvisibleTitle = 'updated'
       this.dialogvisibleForm = true
-      this.$nextTick(() => {
-        this.$refs.ruleform.clearValidate()
-      })
-    },
-
-    createdProject () {
-      this.$refs.ruleform.validate((valid) => {
-        if (valid) {
-          apiinfoAdd(this.projectForm).then(_ => {
-            this.dialogvisibleForm = false
-            this.fetchData()
-            this.$notify({
-              title: '成功',
-              message: '添加成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
+      // this.$nextTick(() => {
+      //   this.$refs.ruleform.clearValidate()
+      // })
     },
     updatedProject () {
       this.$refs.ruleform.validate((valid) => {
@@ -197,6 +186,11 @@ export default {
       this.fetchData()
     },
 
+    handleSizeChange (val) {
+      this.listQuery.size = val
+      this.fetchData()
+    },
+
     handlecancel () {
       this.resetprojectform()
       this.dialogvisibleForm = false
@@ -207,11 +201,20 @@ export default {
         name: 'System',
         query: { id: row.id, name: row.projectName }
       })
+    },
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+      console.log(val)
     }
   }
 }
 </script>
 
 <style scoped>
-
+  .apitest-container{
+    padding: 0 20px 10px 20px;
+  }
+  .page {
+    padding-top: 10px;
+  }
 </style>

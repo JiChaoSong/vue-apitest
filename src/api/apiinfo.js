@@ -30,3 +30,19 @@ export function apiinfoDelete (id) {
     method: 'delete'
   })
 }
+
+export function apiinfoRun (data) {
+  return request({
+    url: '/apiinfo/run',
+    method: 'post',
+    data
+  })
+}
+
+export function apiinfoImport (data) {
+  return request({
+    url: '/apiinfo/import',
+    method: 'post',
+    data
+  })
+}

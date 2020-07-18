@@ -17,9 +17,11 @@ export default {
 
 <style scoped>
   .app-main {
-    margin-top: 15px;
+    height: 100%;
+    line-height: 100%;
     width: 100%;
     padding: 0 10% 0 10%;
+    background-color: #F2F6FC;
   }
 
 </style>

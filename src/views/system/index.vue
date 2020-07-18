@@ -8,7 +8,7 @@
             router
           >
             <div v-for="route in routers" :key="route.path">
-              <el-menu-item  :index="resolepath(route.path)" :route="resolepath(route.path)"  >
+              <el-menu-item v-if="!route.hidden"  :index="resolepath(route.path)" :route="resolepath(route.path)"  >
                 {{route.meta.title}}
               </el-menu-item>
             </div>
@@ -66,6 +66,7 @@ export default {
 
 <style scoped>
   .system-container {
+    padding: 20px;
   }
   .menu-li {
     text-align: center;

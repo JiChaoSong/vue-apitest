@@ -67,7 +67,7 @@ export default {
   .header-logo{
     float: left;
     margin-top: 10px;
-    width: 15%;
+    width: 20%;
   }
   .header-info {
     /*position: fixed;*/
