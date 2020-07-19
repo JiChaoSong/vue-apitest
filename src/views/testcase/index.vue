@@ -3,21 +3,20 @@
     <el-row :gutter="20">
       <el-col :span="4">
         <div class="menu-li">
-          <el-menu
-            :default-active="activemenu"
-            router
-          >
+          <el-menu :default-active="activemenu" router>
             <div v-for="route in routers" :key="route.path">
-              <el-menu-item v-if="!route.hidden"  :index="resolepath(route.path)" :route="resolepath(route.path)"  >
-                {{route.meta.title}}
-              </el-menu-item>
+              <el-menu-item
+                v-if="!route.hidden"
+                :index="resolepath(route.path)"
+                :route="resolepath(route.path)"
+              >{{route.meta.title}}</el-menu-item>
             </div>
           </el-menu>
         </div>
       </el-col>
       <el-col :span="20">
         <div class="main-view">
-          <router-view/>
+          <router-view />
         </div>
       </el-col>
     </el-row>
@@ -77,31 +76,31 @@ export default {
 </script>
 
 <style scoped>
-  .system-container {
-    padding: 20px;
-  }
-  .menu-li {
-    text-align: center;
-    width: 100%;
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  }
+.system-container {
+  padding: 20px;
+}
+.menu-li {
+  text-align: center;
+  width: 100%;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
 
-  .main-view {
-    padding: 20px;
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
-  }
+.main-view {
+  padding: 20px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
 
-  .el-menu-item.is-active {
-    color: #1890ff !important;
-  }
-  .el-menu-item:not(.is-disabled):hover {
-  }
-  .el-menu-item {
-    font-size: 20px !important;
-    text-align: center !important;
-  }
+.el-menu-item.is-active {
+  color: #1890ff !important;
+}
+.el-menu-item:not(.is-disabled):hover {
+}
+.el-menu-item {
+  font-size: 20px !important;
+  text-align: center !important;
+}
 </style>
