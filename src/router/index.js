@@ -1,10 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // import Home from '../views/home/index'
-import System from '../views/system/index'
 import Interface from '../views/apitest/index'
-import TestCase from '../views/testcase/index'
-import Project from '../views/project/index'
+import layoutMenu from '../views/layout/index'
 import Layout from '../layout'
 Vue.use(VueRouter)
 
@@ -53,7 +51,7 @@ export const constantRouterMap = [
         path: 'index',
         name: 'Api',
         component: Interface,
-        meta: { title: '接口管理', activeMenu: '/apitest' },
+        meta: { activeMenu: '/apitest', parentPath: '/apitest/index' },
         redirect: '/apitest/index/list',
         children: [
           {
@@ -83,15 +81,15 @@ export const constantRouterMap = [
       {
         path: 'index',
         name: 'Api',
-        component: TestCase,
-        meta: { title: '用例管理', activeMenu: '/testcase' },
+        component: layoutMenu,
+        meta: { activeMenu: '/testcase', parentPath: '/testcase/index' },
         redirect: '/testcase/index/case',
         children: [
           {
             path: 'case',
             name: 'Case',
             component: () => import(/* webpackChunkName: "about" */ '../views/testcase/case'),
-            meta: { title: '用例列表', activeMenu: '/testcase' }
+            meta: { title: '单场景接口用例', activeMenu: '/testcase' }
           }
         ]
 
@@ -116,7 +114,8 @@ export const constantRouterMap = [
       {
         path: 'index',
         name: 'sys',
-        component: System,
+        component: layoutMenu,
+        meta: { activeMenu: '/system', parentPath: '/system/index' },
         redirect: '/system/index/project',
         children: [
           {
@@ -132,67 +131,13 @@ export const constantRouterMap = [
             meta: { title: '模块管理', activeMenu: '/system' },
             hidden: true
           }
-        ],
-        meta: { title: '系统管理', activeMenu: '/system' }
+        ]
       }
     ]
   }
 ]
 
 export const asyncRouterMap = [
-  {
-    path: '/home',
-    component: Layout,
-    name: 'Home',
-    children: [
-      {
-        path: 'index',
-        component: () => import('../views/home/index'),
-        name: 'Dashboard',
-        meta: { title: '首页' }
-      }
-    ]
-  },
-  {
-    path: '/apitest',
-    name: 'Apitest',
-    component: () => import(/* webpackChunkName: "about" */ '../views/apitest/index'),
-    meta: { title: '接口管理' }
-  },
-  {
-    path: '/testcase',
-    name: 'TestCase',
-    component: () => import(/* webpackChunkName: "about" */ '../views/testcase/index'),
-    meta: { title: '用例管理' }
-  },
-  {
-    path: '/testplan',
-    name: 'TestPlan',
-    component: () => import(/* webpackChunkName: "about" */ '../views/testplan/index'),
-    meta: { title: '测试计划' },
-    hidden: true
-  },
-  {
-    path: '/system',
-    name: 'System',
-    component: System,
-    meta: { title: '系统管理' },
-    redirect: '/system/project',
-    children: [
-      {
-        path: 'project',
-        name: 'Project',
-        component: Project,
-        meta: { title: '产品管理', activeMenu: '/system' }
-      },
-      {
-        path: 'module',
-        name: 'Module',
-        component: () => import('../views/project/components/modules'),
-        meta: { title: '模块管理', activeMenu: '/system' }
-      }
-    ]
-  }
 
 ]
 const createRouter = () => new VueRouter({

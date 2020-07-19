@@ -27,24 +27,37 @@
           {{scope.row.caseStatus}}
         </template>
       </el-table-column>
-      <el-table-column label="所属接口" align="center">
+      <el-table-column label="关联接口" align="center">
         <template slot-scope="scope">
           {{scope.row.interface}}
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center">
+      <el-table-column label="创建人" align="center">
         <template slot-scope="scope">
-          {{scope.row.createdTime | formatDate}}
+          {{scope.row.created_User}}
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" align="center">
+      <el-table-column label="修改人" align="center">
         <template slot-scope="scope">
-          {{scope.row.updatedTime | formatDate}}
+          {{scope.row.updated_User}}
         </template>
       </el-table-column>
+<!--      <el-table-column label="创建时间" align="center">-->
+<!--        <template slot-scope="scope">-->
+<!--          {{scope.row.createdTime | formatDate}}-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="更新时间" align="center">-->
+<!--        <template slot-scope="scope">-->
+<!--          {{scope.row.updatedTime | formatDate}}-->
+<!--        </template>-->
+<!--      </el-table-column>-->
 
       <el-table-column label="操作" align="center" width="250px">
         <template slot-scope="{row}">
+          <el-button type="text">
+            关联接口
+          </el-button>
           <el-button type="text" @click="handleUpdate(row)">
             编辑
           </el-button>
