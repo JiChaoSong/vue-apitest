@@ -1,16 +1,15 @@
 <template>
   <div class="add-container">
     <el-form :model="apirequest" ref="apirequest" :rules="apiinforule">
-
       <el-row :gutter="gutter">
         <el-col :span="span1">
           <el-form-item label="接口名称" prop="apiName">
-          <el-input v-model="apirequest.apiName"/>
+            <el-input v-model="apirequest.apiName" />
           </el-form-item>
         </el-col>
         <el-col :span="span1">
           <el-form-item label="所属项目">
-            <el-input v-model="project.projectName" :disabled="true"/>
+            <el-input v-model="project.projectName" :disabled="true" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -18,49 +17,58 @@
       <el-row :gutter="gutter">
         <el-col :span="span1">
           <el-form-item label="Host">
-          <el-input v-model="apirequest.apiHost">
-            <el-select v-model="apirequest.apiMethod" slot="prepend" placeholder="请选择" class="method-select">
-              <el-option v-for="(item, index) in requestMethod" :key="item" :label=index :value=item />
-            </el-select>
-          </el-input>
+            <el-input v-model="apirequest.apiHost">
+              <el-select
+                v-model="apirequest.apiMethod"
+                slot="prepend"
+                placeholder="请选择"
+                class="method-select"
+              >
+                <el-option
+                  v-for="(item, index) in requestMethod"
+                  :key="item"
+                  :label="index"
+                  :value="item"
+                />
+              </el-select>
+            </el-input>
           </el-form-item>
         </el-col>
         <el-col :span="span1">
           <el-form-item label="接口路径">
-            <el-input v-model="apirequest.apiPath"/>
+            <el-input v-model="apirequest.apiPath" />
           </el-form-item>
         </el-col>
       </el-row>
 
       <el-row :gutter="gutter">
         <el-col :span="span2">
-          <el-tabs class="tags-title" value="1" >
+          <el-tabs class="tags-title" value="1">
             <el-tab-pane label="Params" name="1">
-              <Comoninput :listdata="apirequest.apiParams"/>
+              <Comoninput :listdata="apirequest.apiParams" />
             </el-tab-pane>
             <el-tab-pane label="Headers" name="2">
-              <Comoninput :listdata="apirequest.apiHeaders"/>
+              <Comoninput :listdata="apirequest.apiHeaders" />
             </el-tab-pane>
             <el-tab-pane label="Body" name="3" v-if="apirequest.apiMethod !== 'GET'">
-              <Comoninput :listdata="apirequest.apiBody" assert="body"/>
+              <Comoninput :listdata="apirequest.apiBody" assert="body" />
             </el-tab-pane>
           </el-tabs>
         </el-col>
       </el-row>
       <el-row style="margin-top: 20px" v-if="apiresponse !== null">
         <span style="color: #606266; font-weight: bold">Response</span>
-        <JsonViewer :value="apiresponse" :expand-depth="20"  copyable/>
+        <JsonViewer :value="apiresponse" :expand-depth="20" copyable :theme="on-dark" />
       </el-row>
       <div class="button-form">
         <el-row :gutter="gutter">
           <el-col :span="span2">
             <el-form-item style="margin-bottom: 0">
-              <el-button type="primary" @click="dialogtitle==='created'?createdProject():updatedProject()">
-                提交
-              </el-button>
-              <el-button type="success" @click="runApiInfo">
-                测试
-              </el-button>
+              <el-button
+                type="primary"
+                @click="dialogtitle==='created'?createdProject():updatedProject()"
+              >提交</el-button>
+              <el-button type="success" @click="runApiInfo">测试</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -207,22 +215,22 @@ export default {
 }
 </script>
 
-<style scoped>
-  .add-container {
-    /*text-align: center;*/
-    /*margin-left: 120px;*/
-    margin: 20px 20px 0 20px;
-  }
-  .method-select {
-    width: 120px;
-    text-align: center;
-  }
+<style lang="scss" scoped>
+.add-container {
+  /*text-align: center;*/
+  /*margin-left: 120px;*/
+  margin: 20px 20px 0 20px;
+}
+.method-select {
+  width: 120px;
+  text-align: center;
+}
 
-  .tags-title {
-    /*margin-left: 50px;*/
-  }
-  .button-form {
-    margin-top: 20px;
-    text-align: right!important;
-  }
+.tags-title {
+  /*margin-left: 50px;*/
+}
+.button-form {
+  margin-top: 20px;
+  text-align: right !important;
+}
 </style>
