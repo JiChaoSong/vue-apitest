@@ -204,7 +204,8 @@ export default {
         this.success = res.data.success
       })
       if (!this.success) {
-        this.timer = setTimeout(function () { this.getCaseinfo(id) }, 1000)
+        const _this = this
+        this.timer = setTimeout(function () { _this.getCaseinfo(id) }, 1000)
       }
       if (this.success) {
         this.fullscreenLoading = false
