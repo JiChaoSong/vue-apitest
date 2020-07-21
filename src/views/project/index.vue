@@ -1,46 +1,29 @@
 <template>
   <div class="project-container">
     <div class="operation-container">
-      <el-button type="primary" icon="el-icon-plus" size="small" @click="handleCreate">
-        新增
-      </el-button>
+      <el-button type="primary" icon="el-icon-plus" size="small" @click="handleCreate">新增</el-button>
     </div>
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      stripe
-      size="small"
-    >
+    <el-table v-loading="listLoading" :data="list" stripe size="small">
       <el-table-column align="center" label="#" width="65px  " :index="indexMethod" type="index" />
-      <el-table-column label="项目名称" align="center" >
+      <el-table-column label="项目名称" align="center">
         <template slot-scope="scope">
           <span @click="handlerowclick(scope.row)">{{scope.row.projectName}}</span>
         </template>
       </el-table-column>
       <el-table-column label="项目地址" align="center">
-        <template slot-scope="scope">
-          {{scope.row.projectUrl}}
-        </template>
+        <template slot-scope="scope">{{scope.row.projectUrl}}</template>
       </el-table-column>
       <el-table-column label="创建时间" align="center">
-        <template slot-scope="scope">
-          {{scope.row.createdTime | formatDate}}
-        </template>
+        <template slot-scope="scope">{{scope.row.createdTime | formatDate}}</template>
       </el-table-column>
       <el-table-column label="更新时间" align="center">
-        <template slot-scope="scope">
-          {{scope.row.updatedTime | formatDate}}
-        </template>
+        <template slot-scope="scope">{{scope.row.updatedTime | formatDate}}</template>
       </el-table-column>
 
       <el-table-column label="操作" align="center" width="250px">
         <template slot-scope="{row}">
-          <el-button type="text" @click="handleUpdate(row)">
-            编辑
-          </el-button>
-          <el-button type="text" style="color: #f95359" @click="deleteProject(row)">
-            删除
-          </el-button>
+          <el-button type="text" @click="handleUpdate(row)">编辑</el-button>
+          <el-button type="text" style="color: #f95359" @click="deleteProject(row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -52,24 +35,32 @@
       @current-change="handleCurrentChange"
     />
 
-    <el-dialog :title="titleMap[dialogvisibleTitle]" :visible.sync="dialogvisibleForm" width="800px">
+    <el-dialog
+      :title="titleMap[dialogvisibleTitle]"
+      :visible.sync="dialogvisibleForm"
+      width="800px"
+    >
       <el-form ref="ruleform" :model="projectForm" :rules="projectrule" label-width="100px">
         <el-form-item label="项目名称:" prop="projectName">
-          <el-input v-model="projectForm.projectName" placeholder="请输入项目名称"/>
+          <el-input v-model="projectForm.projectName" placeholder="请输入项目名称" />
         </el-form-item>
         <el-form-item label="项目地址:" prop="projectUrl">
-          <el-input v-model="projectForm.projectUrl" placeholder="请输入项目地址"/>
+          <el-input v-model="projectForm.projectUrl" placeholder="请输入项目地址" />
         </el-form-item>
         <el-form-item label="项目描述:" prop="projectDesc">
           <el-input
             v-model="projectForm.projectDesc"
-            type="textarea" placeholder="请输入项目描述"
+            type="textarea"
+            placeholder="请输入项目描述"
             autosize
             style="width: 400px"
           />
         </el-form-item>
         <el-form-item style="text-align: left">
-          <el-button type="primary" @click="dialogvisibleTitle==='created'?createdProject():updatedProject()">保存</el-button>
+          <el-button
+            type="primary"
+            @click="dialogvisibleTitle==='created'?createdProject():updatedProject()"
+          >保存</el-button>
           <el-button @click="handlecancel">取消</el-button>
         </el-form-item>
       </el-form>
@@ -112,7 +103,7 @@ export default {
         projectDesc: '',
         projectUrl: '',
         projectEnv: '',
-        user: this.user
+        person: this.user
       },
       projectrule: {
         projectName: [
@@ -144,7 +135,7 @@ export default {
         projectDesc: '',
         projectUrl: '',
         projectEnv: '',
-        user: this.user
+        person: this.user
       }
     },
 
@@ -217,7 +208,7 @@ export default {
             duration: 2000
           })
         })
-      }).catch(_ => {})
+      }).catch(_ => { })
     },
 
     indexMethod (index) {
@@ -245,16 +236,13 @@ export default {
 </script>
 
 <style scoped>
-
-  .el-input{
-    width: 400px;
-  }
-  .project-container {
-
-  }
-  .tag-span {
-    margin:0 20px 0 20px;
-    font-weight: bold;
-  }
-
+.el-input {
+  width: 400px;
+}
+.project-container {
+}
+.tag-span {
+  margin: 0 20px 0 20px;
+  font-weight: bold;
+}
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <div class="">
-    <el-tabs v-model="editableTabsValue"  @tab-remove="removeTab" type=border-card>
+  <div class>
+    <el-tabs v-model="editableTabsValue" @tab-remove="removeTab" type="border-card">
       <el-tab-pane
         v-for="item in editableTabs"
         :key="item.name"
@@ -14,53 +14,58 @@
               <el-input v-model="listQuery.apiNames" size="small" />
             </el-form-item>
             <el-form-item label="接口地址" prop="apiPath">
-              <el-input v-model="listQuery.apiPaths" size="small"/>
+              <el-input v-model="listQuery.apiPaths" size="small" />
             </el-form-item>
             <el-form-item label="请求方法" prop="apiMethod">
               <el-select v-model="listQuery.apiMethods" size="small">
-                <el-option v-for="item in Methods" :key="item.value" :value="item.value" :label="item.label"/>
+                <el-option
+                  v-for="item in Methods"
+                  :key="item.value"
+                  :value="item.value"
+                  :label="item.label"
+                />
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="fetchData" size="small">
-                查询
-              </el-button>
-              <el-button @click="resetListQuery" size="small">
-                重置
-              </el-button>
+              <el-button type="primary" @click="fetchData" size="small">查询</el-button>
+              <el-button @click="resetListQuery" size="small">重置</el-button>
             </el-form-item>
           </el-form>
         </div>
         <div class="operation-container" v-if="item.name === '1'">
-          <el-button type="primary" icon="el-icon-plus" size="small" @click="addTab(editableTabsValue)">
-            新增
-          </el-button>
-          <el-button type="primary" icon="el-icon-plus" size="small" @click="handleImport">
-            导入
-          </el-button>
+          <el-button
+            type="primary"
+            icon="el-icon-plus"
+            size="small"
+            @click="addTab(editableTabsValue)"
+          >新增</el-button>
+          <el-button type="primary" icon="el-icon-plus" size="small" @click="handleImport">导入</el-button>
         </div>
-        <Apilist v-if="item.name === '1'" :list="list" :total="total" :list-loading="listLoading" :list-query="listQuery"
-        :fetch-data="fetchData" :add-tab="editTab" @getdata="getapirequest"
+        <Apilist
+          v-if="item.name === '1'"
+          :list="list"
+          :total="total"
+          :list-loading="listLoading"
+          :list-query="listQuery"
+          :fetch-data="fetchData"
+          :add-tab="editTab"
+          @getdata="getapirequest"
         />
-        <Apiadd v-else :apirequest="apirequest" :dialogtitle="dialogtitle"/>
+        <Apiadd v-else :apirequest="apirequest" :dialogtitle="dialogtitle" />
       </el-tab-pane>
     </el-tabs>
 
     <el-dialog title="导入接口" :visible.sync="dialogvisibleImport" width="800px">
       <el-form ref="apiImport" :model="apiImport" :rules="apiImportRule" label-width="120px">
         <el-form-item label="接口文档地址" prop="url">
-          <el-input v-model="apiImport.url" style="width: 80%"/>
+          <el-input v-model="apiImport.url" style="width: 80%" />
         </el-form-item>
         <el-form-item label="所属项目" prop="project">
-          <el-input v-model="apiImport.project" style="width: 80%" disabled/>
+          <el-input v-model="apiImport.project" style="width: 80%" disabled />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="importApiInfo">
-            提交
-          </el-button>
-          <el-button @click="hanlecancel">
-            取消
-          </el-button>
+          <el-button type="primary" @click="importApiInfo">提交</el-button>
+          <el-button @click="hanlecancel">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -216,7 +221,7 @@ export default {
 
     importApiInfo () {
       this.$refs.apiImport.validate((valid) => {
-        if (valid) {}
+        if (valid) { }
         apiinfoImport(this.apiImport).then(res => {
           this.dialogvisibleImport = false
           this.$notify({
@@ -322,18 +327,18 @@ export default {
 </script>
 
 <style scoped>
-  .apitest-container {
-    width: 100%;
-    padding: 20px;
-  }
-  .el-tabs {
-    border-radius: 5px !important;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1) !important;
-  }
-  .filter-container {
-    padding: 0 20px 0 20px;
-  }
-  .operation-container {
-    padding: 0 20px 0 20px;
-  }
+.apitest-container {
+  width: 100%;
+  padding: 20px;
+}
+.el-tabs {
+  border-radius: 5px !important;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1) !important;
+}
+.filter-container {
+  padding: 0 20px 0 20px;
+}
+.operation-container {
+  padding: 0 20px 0 20px;
+}
 </style>
