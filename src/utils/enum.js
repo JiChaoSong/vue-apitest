@@ -18,10 +18,10 @@ export const allEnums = {
     { value: 'OPTIONS', label: 'OPTIONS' }
   ],
   caseStatus: [
-    { value: 101, label: 'unexecuted' },
-    { value: 102, label: 'pass' },
-    { value: 103, label: 'fail' },
-    { value: 104, label: 'block' },
-    { value: 105, label: 'closed' }
+    { value: 'unexecuted', label: 'unexecuted' },
+    { value: 'pass', label: 'pass' },
+    { value: 'fail', label: 'fail' },
+    { value: 'block', label: 'block' },
+    { value: 'closed', label: 'closed' }
   ]
 }

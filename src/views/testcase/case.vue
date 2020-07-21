@@ -2,115 +2,134 @@
   <div class="project-container">
     <div class="operation-container">
       <el-button type="primary" icon="el-icon-plus" size="small" @click="handleCreate">新增</el-button>
-    </div>
-    <el-table v-loading="listLoading" :data="list" stripe size="small">
+  </div>
+  <el-table v-loading="listLoading" :data="list" stripe size="small">
       <el-table-column align="center" label="#" width="65px  " :index="indexMethod" type="index" />
       <el-table-column label="用例编号" align="center">
-        <template slot-scope="scope">{{scope.row.caseNum}}</template>
-      </el-table-column>
-      <el-table-column label="用例名称" align="center">
-        <template slot-scope="scope">{{scope.row.caseName}}</template>
-      </el-table-column>
-      <el-table-column label="用例状态" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.caseStatus | formatStatus">{{scope.row.caseStatus}}</el-tag>
+    <template slot-scope="scope">{{ scope.row.caseNum }}</template>
+  </el-table-column>
+  <el-table-column label="用例名称" align="center">
+    <template slot-scope="scope">{{ scope.row.caseName }}</template>
+  </el-table-column>
+  <el-table-column label="用例状态" align="center">
+    <template slot-scope="scope">
+      <el-tag : {{ scope.row.caseStatus }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="关联接口" align="center">
-        <template slot-scope="scope">{{scope.row.apiInfo.apiName}}</template>
-      </el-table-column>
-      <el-table-column label="创建人" align="center">
-        <template slot-scope="scope">{{scope.row.created_User}}</template>
-      </el-table-column>
-      <el-table-column label="修改人" align="center">
-        <template slot-scope="scope">{{scope.row.updated_User}}</template>
-      </el-table-column>
+  <el-table-column label="关联接口" align="center">
+    <template slot-scope="scope">{{ scope.row.apiInfo.apiName }}</template>
+  </el-table-column>
+  <el-table-column label="创建人" align="center">
+    <template slot-scope="scope">{{ scope.row.created_User }}</template>
+  </el-table-column>
+  <el-table-column label="修改人" align="center">
+    <template slot-scope="scope">{{ scope.row.updated_User }}</template>
+  </el-table-column>
 
-      <el-table-column label="操作" align="center" width="250px">
-        <template slot-scope="{row}">
-          <el-button type="text" @click="runSimpleCase(row)">执行</el-button>
-          <el-button type="text" @click="handleRelationApi(row)">关联接口</el-button>
-          <el-button type="text" @click="handleUpdate(row)">编辑</el-button>
-          <el-button type="text" style="color: #f95359" @click="deleteProject(row)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+  <el-table-column label="操作" align="center" width="250px">
+    <template slot-scope="{row}">
+      <el-button
+        type="text"
+            @click="runSimpleCase(row)"
+            v-loading.fullscreen.lock="fullscreenLoading"
+            element-loading-text="用例执行中"
+          >执行</el-button>
+    <el-button type="text" @click="handleRelationApi(row)">关联接口</el-button>
+  <el type="text" @click="handleUpdate(row)" > 编辑</el - button - button - button >
+    <el type="text" style="color: #f95359" @click="deleteProject(row)" > 删除</el - button - button - button >
+        </template >
+      </el - table - column >
+    </el - table >
 
-    <el-pagination
-      background
-      layout="prev, pager, next, total"
-      :total="total"
+  <el-pagination
+    background
+    layout="prev, pager, next, total"
+      : total="total"
       @current-change="handleCurrentChange"
-    />
+  />
 
-    <el-dialog
-      :title="titleMap[dialogvisibleTitle]"
-      :visible.sync="dialogvisibleForm"
-      width="800px"
-    >
-      <el-form ref="ruleform" :model="projectForm" :rules="projectrule" label-width="100px">
+  <el-dialog
+      : title="titleMap[dialogvisibleTitle]"
+      : visible.sync="dialogvisibleForm"
+    width="800px"
+  >
+    <el-form ref="ruleform" :model="projectForm" :rules="projectrule" label-width="100px">
         <el-form-item label="用例编号:" prop="projectName">
-          <el-input v-model="projectForm.caseNum" placeholder="请输入用例编号" />
-        </el-form-item>
-        <el-form-item label="用例名称:" prop="projectUrl">
-          <el-input v-model="projectForm.caseName" placeholder="请输入用例名称" />
-        </el-form-item>
-        <el-form-item label="用例描述:" prop="projectDesc">
-          <el-input
-            v-model="projectForm.caseDesc"
-            type="textarea"
-            placeholder="请输入用例描述"
-            autosize
-            style="width: 400px"
-          />
-        </el-form-item>
-        <el-form-item style="text-align: left">
-          <el-button
-            type="primary"
+      <el-input v-model="projectForm.caseNum" placeholder="请输入用例编号" />
+    </el-form-item>
+    <el-form-item label="用例名称:" prop="projectUrl">
+      <el-input v-model="projectForm.caseName" placeholder="请输入用例名称" />
+    </el-form-item>
+    <el-form-item label="用例状态:" prop="projectUrl">
+      <el-select v-model="projectForm.caseStatus" placeholder="请选择">
+        <el-option
+          v-for="item in this.allEnums.caseStatus"
+              :key="item.value"
+              :value="item.value"
+              :label="item.label"
+            />
+          </el-select>
+    </el-form-item>
+    <el-form-item label="用例描述:" prop="projectDesc">
+      <el-input
+        v-model="projectForm.caseDesc"
+        type="textarea"
+        placeholder="请输入用例描述"
+        autosize
+        style="width: 400px"
+      />
+    </el-form-item>
+    <el style="text-align: left">
+      <el-button
+        type="primary"
             @click="dialogvisibleTitle==='created'?createdProject():updatedProject()"
           >保存</el-button>
-          <el-button @click="handlecancel">取消</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
-
-    <el-dialog title="关联接口" :visible.sync="dialogvisibleRelation" width="600px">
-      <el-form label-width="100px" ref="apiinfoForm" :rules="apiinfoFormRule" :model="apiinfoForm">
+    <el-button @click="handlecancel">取消</el-button>
+        </el - form - item - form - item - form - item >
+      </el - form >
+    </el - dialog >
+  <el-dialog title="关联接口" : visible.sync="dialogvisibleRelation" width="600px">
+    <el label-width="100px" ref="apiinfoForm" :rules="apiinfoFormRule" :model="apiinfoForm">
         <el-form-item label="关联接口:" prop="apiinfoId">
-          <el-select v-model="apiinfoForm.apiinfoId" filterable placeholder="请选择">
-            <el-option
-              v-for="item in apiinfolist"
+      <el-select v-model="apiinfoForm.apiinfoId" filterable placeholder="请选择">
+        <el-option
+          v-for="item in apiinfolist"
               :key="item.id"
               :value="item.id"
               :label="item.apiName"
             />
           </el-select>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="updateApiinfo">提交</el-button>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="updateApiinfo">提交</el-button>
-        </el-form-item>
-      </el-form>
+      </el - form - form - form >
+    </el - dialog >
+  <el-dialog title="用例报告" : visible.sync="dialogvisibleRecord" width="800px">
+    <SimpleCaseRecord :caseData="caseData" />
     </el-dialog>
-  </div>
-</template>
+  </div >
+</template >
 
-<script>
-import { getUserId } from '../../utils/user'
-import { caseAdd, caseDelete, caseList, caseUpdate, simplecaseRun, caseInfo } from '../../api/case'
-import { apiinfoList } from '../../api/apiinfo'
+  <script>
+    import {getUserId} from '../../utils/user'
+import {caseAdd, caseDelete, caseList, caseUpdate, simplecaseRun, caseInfo} from '../../api/case'
+import {apiinfoList} from '../../api/apiinfo'
+import SimpleCaseRecord from '../../components/SimpleCaseRecord/index'
 
 export default {
-  name: 'project',
+      name: 'project',
+  components: {SimpleCaseRecord},
   inject: ['reload'],
   computed: {
-    user () {
+      user() {
       return getUserId()
     }
   },
   filters: {
-    formatStatus (val) {
+      formatStatus(val) {
       const tagColor = {
-        unexecuted: null,
+      unexecuted: null,
         pass: 'success',
         fail: 'danger',
         block: 'warning',
@@ -125,13 +144,16 @@ export default {
       listLoading: true,
       total: 0,
       listQuery: {
-        page: 1,
+      page: 1,
         size: 10
       },
 
       // 用例执行时的loading
       fullscreenLoading: false,
       timer: '',
+
+      dialogvisibleRecord: false,
+      caseData: null,
 
       success: false,
 
@@ -140,53 +162,54 @@ export default {
 
       dialogvisibleRelation: false,
       apiinfoForm: {
-        apiinfoId: null
+      apiinfoId: null
       },
 
       apiinfoFormRule: {
-        apiinfoId: [
-          { required: true, message: '请选择关联接口', trigger: 'blur' }
+      apiinfoId: [
+          {required: true, message: '请选择关联接口', trigger: 'blur' }
         ]
       },
 
       dialogvisibleTitle: null,
       dialogvisibleForm: false,
       titleMap: {
-        updated: '编辑项目',
+      updated: '编辑项目',
         created: '创建项目'
       },
 
       projectForm: {
-        id: undefined,
+      id: undefined,
         caseNum: '',
         caseName: '',
         caseDesc: '',
+        caseStatus: 'unexecuted',
         createdUser: this.user,
         updatedUser: this.user,
         interface: ''
       },
       projectrule: {
-        caseNum: [
-          { required: true, message: '请输入用例编号', trigger: 'blur' }
+      caseNum: [
+          {required: true, message: '请输入用例编号', trigger: 'blur' }
         ],
         caseName: [
-          { required: true, message: '请输入用例名称', trigger: 'blur' }
+          {required: true, message: '请输入用例名称', trigger: 'blur' }
         ]
       }
     }
   },
   created () {
-    this.fetchData()
+      this.fetchData()
     this.getapiList()
   },
   mounted () {
-    // this.timer = setTimeout(this.getCaseinfo, 1000)
-  },
+      // this.timer = setTimeout(this.getCaseinfo, 1000)
+    },
   methods: {
-    fetchData () {
+      fetchData() {
       this.listLoading = true
       caseList(this.listQuery).then(res => {
-        this.list = res.data.results
+      this.list = res.data.results
         this.total = res.data.count
         this.listLoading = false
       })
@@ -201,14 +224,17 @@ export default {
     getCaseinfo (id) {
       this.fullscreenLoading = true
       caseInfo(id).then(res => {
-        this.success = res.data.success
+      this.success = res.data.success
+        this.caseData = res.data
       })
       if (!this.success) {
-        this.timer = setTimeout(function () { this.getCaseinfo(id) }, 1000)
+        const _this = this
+        this.timer = setTimeout(function () {_this.getCaseinfo(id)}, 1000)
       }
       if (this.success) {
-        this.fullscreenLoading = false
+      this.fullscreenLoading = false
         clearTimeout(this.timer)
+        this.dialogvisibleRecord = true
       }
     },
 
@@ -227,6 +253,7 @@ export default {
         caseNum: '',
         caseName: '',
         caseDesc: '',
+        caseStatus: 'unexecuted',
         createdUser: this.user,
         updatedUser: this.user,
         interface: ''
@@ -236,11 +263,11 @@ export default {
     // 关联接口
     handleRelationApi (row) {
       this.projectForm = Object.assign({}, row)
-      this.apiinfoForm = { apiinfoId: this.projectForm.interface }
+      this.apiinfoForm = {apiinfoId: this.projectForm.interface }
       this.dialogvisibleRelation = true
       this.$nextTick(() => {
-        this.$refs.apiinfoForm.clearValidate()
-      })
+      this.$refs.apiinfoForm.clearValidate()
+    })
     },
 
     updateApiinfo () {
@@ -268,8 +295,8 @@ export default {
       this.dialogvisibleTitle = 'created'
       this.dialogvisibleForm = true
       this.$nextTick(() => {
-        this.$refs.ruleform.clearValidate()
-      })
+      this.$refs.ruleform.clearValidate()
+    })
     },
 
     createdProject () {
@@ -295,8 +322,8 @@ export default {
       this.dialogvisibleTitle = 'updated'
       this.dialogvisibleForm = true
       this.$nextTick(() => {
-        this.$refs.ruleform.clearValidate()
-      })
+      this.$refs.ruleform.clearValidate()
+    })
     },
 
     updatedProject () {
@@ -363,15 +390,15 @@ export default {
 }
 </script>
 
-<style scoped>
-.el-input {
-  width: 400px;
+  <style scoped>
+    .el-input {
+      width: 400px;
 }
 .el-select {
-  width: 280px;
+      width: 400px;
 }
 .tag-span {
-  margin: 0 20px 0 20px;
+      margin: 0 20px 0 20px;
   font-weight: bold;
 }
 </style>
