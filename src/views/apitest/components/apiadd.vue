@@ -58,7 +58,7 @@
       </el-row>
       <el-row style="margin-top: 20px" v-if="apiresponse !== null">
         <span style="color: #606266; font-weight: bold">Response</span>
-        <JsonViewer :value="apiresponse" :expand-depth="20" copyable :theme="on-dark" />
+        <JsonViewer :value="apiresponse" :expand-depth="20" copyable />
       </el-row>
       <div class="button-form">
         <el-row :gutter="gutter">
@@ -182,21 +182,26 @@ export default {
       })
     },
     runApiInfo () {
-      this.$refs.apirequest.validate((valid) => {
-        if (valid) {
-          apiinfoUpdate(this.apirequest.id, this.apirequest).then(_ => {
+      if (this.dialogtitle !== 'created') {
+        apiinfoUpdate(this.apirequest.id, this.apirequest).then(_ => {
 
-          })
-          apiinfoRun(this.apirequest).then(res => {
-            this.apiresponse = JSON.parse(res.data)
-            this.$notify({
-              title: '成功',
-              message: '请求成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
+        })
+      }
+
+      apiinfoRun(this.apirequest).then(res => {
+        try {
+          const response = JSON.parse(res.data)
+          this.apiresponse = response
+        } catch {
+          this.apiresponse = res.data
         }
+
+        this.$notify({
+          title: '成功',
+          message: '请求成功',
+          type: 'success',
+          duration: 2000
+        })
       })
     },
 

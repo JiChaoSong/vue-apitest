@@ -12,7 +12,9 @@
         <template slot-scope="scope">{{scope.row.caseName}}</template>
       </el-table-column>
       <el-table-column label="用例状态" align="center">
-        <template slot-scope="scope">{{scope.row.caseStatus}}</template>
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.caseStatus | formatStatus">{{scope.row.caseStatus}}</el-tag>
+        </template>
       </el-table-column>
       <el-table-column label="关联接口" align="center">
         <template slot-scope="scope">{{scope.row.apiInfo.apiName}}</template>
@@ -26,6 +28,7 @@
 
       <el-table-column label="操作" align="center" width="250px">
         <template slot-scope="{row}">
+          <el-button type="text" @click="runSimpleCase(row)">执行</el-button>
           <el-button type="text" @click="handleRelationApi(row)">关联接口</el-button>
           <el-button type="text" @click="handleUpdate(row)">编辑</el-button>
           <el-button type="text" style="color: #f95359" @click="deleteProject(row)">删除</el-button>
@@ -93,7 +96,7 @@
 
 <script>
 import { getUserId } from '../../utils/user'
-import { caseAdd, caseDelete, caseList, caseUpdate } from '../../api/case'
+import { caseAdd, caseDelete, caseList, caseUpdate, simplecaseRun, caseInfo } from '../../api/case'
 import { apiinfoList } from '../../api/apiinfo'
 
 export default {
@@ -102,6 +105,18 @@ export default {
   computed: {
     user () {
       return getUserId()
+    }
+  },
+  filters: {
+    formatStatus (val) {
+      const tagColor = {
+        unexecuted: null,
+        pass: 'success',
+        fail: 'danger',
+        block: 'warning',
+        closed: 'info'
+      }
+      return tagColor[val]
     }
   },
   data () {
@@ -113,6 +128,12 @@ export default {
         page: 1,
         size: 10
       },
+
+      // 用例执行时的loading
+      fullscreenLoading: false,
+      timer: '',
+
+      success: false,
 
       // api列表
       apiinfolist: null,
@@ -139,7 +160,6 @@ export default {
         id: undefined,
         caseNum: '',
         caseName: '',
-        caseStatus: '',
         caseDesc: '',
         createdUser: this.user,
         updatedUser: this.user,
@@ -159,6 +179,9 @@ export default {
     this.fetchData()
     this.getapiList()
   },
+  mounted () {
+    // this.timer = setTimeout(this.getCaseinfo, 1000)
+  },
   methods: {
     fetchData () {
       this.listLoading = true
@@ -175,12 +198,34 @@ export default {
       })
     },
 
+    getCaseinfo (id) {
+      this.fullscreenLoading = true
+      caseInfo(id).then(res => {
+        this.success = res.data.success
+      })
+      if (!this.success) {
+        this.timer = setTimeout(function () { this.getCaseinfo(id) }, 1000)
+      }
+      if (this.success) {
+        this.fullscreenLoading = false
+        clearTimeout(this.timer)
+      }
+    },
+
+    // 单场景测试用例执行
+    runSimpleCase (row) {
+      simplecaseRun(row).then(res => {
+        if (res.code === 20000) {
+          this.getCaseinfo(row.id)
+        }
+      })
+    },
+
     resetprojectform () {
       this.projectForm = {
         id: undefined,
         caseNum: '',
         caseName: '',
-        caseStatus: '',
         caseDesc: '',
         createdUser: this.user,
         updatedUser: this.user,

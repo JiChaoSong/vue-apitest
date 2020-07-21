@@ -52,6 +52,12 @@ const actions = {
         if (!data.accesstoken) {
           reject(new Error('登陆失败'))
         }
+        if (!data.is_active) {
+          reject(new Error('用户状态非法'))
+        }
+        if (data.project.length === 0) {
+          reject(new Error('权限错误'))
+        }
         commit('SET_TOKEN', data.accesstoken)
         setToken(data.accesstoken)
         resolve()
@@ -72,6 +78,7 @@ const actions = {
         setUserId(data[0].id)
         const projectlsit = data[0].project
         const project = projectlsit[0].id
+        console.log(project)
         const projectname = projectlsit[0].projectName
         commit('SET_PROJECTLIST', projectlsit)
         commit('SET_Project', project)

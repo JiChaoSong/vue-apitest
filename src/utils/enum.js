@@ -16,5 +16,12 @@ export const allEnums = {
     { value: 'DELETE', label: 'DELETE' },
     { value: 'HEAD', label: 'HEAD' },
     { value: 'OPTIONS', label: 'OPTIONS' }
+  ],
+  caseStatus: [
+    { value: 101, label: 'unexecuted' },
+    { value: 102, label: 'pass' },
+    { value: 103, label: 'fail' },
+    { value: 104, label: 'block' },
+    { value: 105, label: 'closed' }
   ]
 }

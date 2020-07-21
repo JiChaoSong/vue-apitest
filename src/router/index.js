@@ -125,6 +125,12 @@ export const constantRouterMap = [
             meta: { title: '项目管理', activeMenu: '/system' }
           },
           {
+            path: 'user',
+            name: 'User',
+            component: () => import('../views/user/index.vue'),
+            meta: { title: '个人信息', activeMenu: '/system' }
+          },
+          {
             path: 'module',
             name: 'Module',
             component: () => import('../views/project/components/modules'),

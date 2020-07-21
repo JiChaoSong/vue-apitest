@@ -8,6 +8,13 @@ export function caseList (param) {
   })
 }
 
+export function caseInfo (id) {
+  return request({
+    url: '/case/' + id + '/',
+    method: 'get'
+  })
+}
+
 export function caseAdd (data) {
   return request({
     url: '/case/',
@@ -28,5 +35,13 @@ export function caseDelete (id) {
   return request({
     url: '/case/' + id + '/',
     method: 'delete'
+  })
+}
+
+export function simplecaseRun (data) {
+  return request({
+    url: '/case/run',
+    method: 'post',
+    data
   })
 }
