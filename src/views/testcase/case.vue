@@ -3,7 +3,14 @@
     <div class="operation-container">
       <el-button type="primary" icon="el-icon-plus" size="small" @click="handleCreate">新增</el-button>
     </div>
-    <el-table v-loading="listLoading" :data="list" stripe size="small">
+    <el-table
+      v-loading="listLoading"
+      :data="list"
+      stripe
+      size="small"
+      :row-style="{height: '20px'}"
+      :cell-style="{padding:'5px'}"
+    >
       <el-table-column align="center" label="#" width="65px  " :index="indexMethod" type="index" />
       <el-table-column label="用例编号" align="center">
         <template slot-scope="scope">{{scope.row.caseNum}}</template>
@@ -17,7 +24,11 @@
         </template>
       </el-table-column>
       <el-table-column label="关联接口" align="center">
-        <template slot-scope="scope">{{scope.row.apiInfo.apiName}}</template>
+        <template slot-scope="scope">
+          <el-button type="text" @click="getApiInfodetail(scope.row)">
+            {{scope.row.apiInfo.apiName}}
+          </el-button>
+        </template>
       </el-table-column>
       <el-table-column label="创建人" align="center">
         <template slot-scope="scope">{{scope.row.created_User}}</template>
@@ -38,7 +49,9 @@
             <el-button type="text" @click="handleRelationApi(row)">关联接口</el-button>
           </el-row>
           <el-row>
-            <el-button type="text" @click="lookcaseRecord" v-if="caserecordId !== null && caserecordId !== 'undefined'">查看报告</el-button>
+            <router-link :to="{name:'CaseRecord', params: {id: row.id}}">
+              <el-button type="text" >查看</el-button>
+            </router-link>
             <el-button type="text" @click="handleUpdate(row)">编辑</el-button>
             <el-button type="text" style="color: #f95359" @click="deleteProject(row)">删除</el-button>
           </el-row>
@@ -105,6 +118,10 @@
     <el-dialog title="测试报告" :visible.sync="dialogvisibleReport" width="1000px">
       <SimpleCase :apicase="caseinformation" />
     </el-dialog>
+
+    <el-dialog :title="dialogtitle" :visible.sync="dialogvisibleApiInfo" width="1000px">
+      <ApiAdd :apirequest="apirequest" :dialogtitle="dialogtitle"/>
+    </el-dialog>
   </div>
 </template>
 
@@ -122,11 +139,12 @@ import {
 } from '../../api/case'
 import { apiinfoList } from '../../api/apiinfo'
 import SimpleCase from '../../components/SimpleCase/index'
+import ApiAdd from '../../views/apitest/components/apiadd'
 
 export default {
   name: 'project',
   inject: ['reload'],
-  components: { SimpleCase },
+  components: { SimpleCase, ApiAdd },
   computed: {
     user () {
       return getUserId()
@@ -153,6 +171,10 @@ export default {
         page: 1,
         size: 10
       },
+
+      dialogtitle: null,
+      dialogvisibleApiInfo: false,
+      apirequest: null,
 
       // 用例执行时的loading
       fullscreenLoading: false,
@@ -244,6 +266,13 @@ export default {
       }
     },
 
+    // 点击接口详情
+    getApiInfodetail (row) {
+      this.apirequest = row.apiInfo
+      this.dialogtitle = row.apiInfo.apiName
+      this.dialogvisibleApiInfo = true
+    },
+
     // 单场景测试用例执行
     runSimpleCase (row) {
       caserecordAdd({ case: row.id }).then(response => {
@@ -264,7 +293,7 @@ export default {
 
     lookcaseRecord () {
       caserecordInfo(this.caserecordId).then(res => {
-        this.caserecorddetail = res.data.results[0]
+        this.caserecorddetail = res.data
         this.dialogvisibleReport = true
       })
     },

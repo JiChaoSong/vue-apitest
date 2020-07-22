@@ -63,7 +63,18 @@ export default {
       return routes.meta.parentPath
     },
     activemenu () {
-      return this.$route.path
+      var indexroute = null
+      var route = this.$route.matched
+      for (var i = 0; i < route.length; i++) {
+        if (route[i].path === this.$route.path && route[i].meta.index) {
+          indexroute = route[i].meta.index
+        }
+      }
+      if (indexroute === null) {
+        return this.$route.path
+      } else {
+        return indexroute
+      }
     }
   },
   created () {

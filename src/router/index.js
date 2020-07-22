@@ -90,6 +90,13 @@ export const constantRouterMap = [
             name: 'Case',
             component: () => import(/* webpackChunkName: "about" */ '../views/testcase/case'),
             meta: { title: '单场景接口用例', activeMenu: '/testcase' }
+          },
+          {
+            path: 'simplecaserecord',
+            name: 'CaseRecord',
+            component: () => import(/* webpackChunkName: "about" */ '../views/testcase/simplecaserecord'),
+            meta: { title: '单场景用例报告', activeMenu: '/testcase', index: '/testcase/index/case' },
+            hidden: true
           }
         ]
 
