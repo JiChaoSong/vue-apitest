@@ -38,5 +38,9 @@ module.exports = {
         '@': resolve('src')
       }
     }
-  }
+  },
+  transpileDependencies: [
+    'vue-echarts',
+    'resize-detector'
+  ]
 }

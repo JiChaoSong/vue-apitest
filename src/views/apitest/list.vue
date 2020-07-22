@@ -118,6 +118,7 @@ export default {
         apiName: '',
         apiParams: [
           {
+            type: 103,
             key: '',
             value: '',
             desc: ''
@@ -125,6 +126,7 @@ export default {
         ],
         apiHeaders: [
           {
+            type: 103,
             key: '',
             value: '',
             desc: ''
@@ -138,7 +140,7 @@ export default {
             desc: ''
           }
         ],
-        assert: [
+        apiAssert: [
           {
             type: 101,
             key: '',
@@ -255,6 +257,7 @@ export default {
         apiName: '',
         apiParams: [
           {
+            type: 103,
             key: '',
             value: '',
             desc: ''
@@ -262,6 +265,7 @@ export default {
         ],
         apiHeaders: [
           {
+            type: 103,
             key: '',
             value: '',
             desc: ''
@@ -275,7 +279,7 @@ export default {
             desc: ''
           }
         ],
-        assert: [
+        apiAssert: [
           {
             type: 101,
             key: '',

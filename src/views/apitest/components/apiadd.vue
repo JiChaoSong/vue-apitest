@@ -53,6 +53,9 @@
             <el-tab-pane label="Body" name="3" v-if="apirequest.apiMethod !== 'GET'">
               <Comoninput :listdata="apirequest.apiBody" assert="body" />
             </el-tab-pane>
+            <el-tab-pane label="断言" name="4">
+              <Comoninput :listdata="apirequest.apiAssert" assert="assert" />
+            </el-tab-pane>
           </el-tabs>
         </el-col>
       </el-row>
@@ -207,14 +210,18 @@ export default {
 
     changeType () {
       if (this.apirequest.apiHeaders === null) {
-        this.apirequest.apiHeaders = [{ key: '', value: '', desc: '' }]
+        this.apirequest.apiHeaders = [{ type: 101, key: '', value: '', desc: '' }]
       }
       if (this.apirequest.apiParams === null) {
-        this.apirequest.apiParams = [{ key: '', value: '', desc: '' }]
+        this.apirequest.apiParams = [{ type: 101, key: '', value: '', desc: '' }]
       }
       if (this.apirequest.apiBody === null || this.apirequest.apiBody.length === 0) {
-        this.apirequest.apiBody = [{ key: '', value: '', desc: '' }]
+        this.apirequest.apiBody = [{ type: 101, key: '', value: '', desc: '' }]
       }
+      if (this.apirequest.apiAssert === null || this.apirequest.apiAssert.length === 0) {
+        this.apirequest.apiAssert = [{ type: 101, key: [], value: '', desc: '' }]
+      }
+      console.log(this.apirequest)
     }
   }
 }

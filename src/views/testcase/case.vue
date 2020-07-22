@@ -28,10 +28,20 @@
 
       <el-table-column label="操作" align="center" width="250px">
         <template slot-scope="{row}">
-          <el-button type="text" @click="runSimpleCase(row)">执行</el-button>
-          <el-button type="text" @click="handleRelationApi(row)">关联接口</el-button>
-          <el-button type="text" @click="handleUpdate(row)">编辑</el-button>
-          <el-button type="text" style="color: #f95359" @click="deleteProject(row)">删除</el-button>
+          <el-row>
+            <el-button
+              type="text"
+              @click="runSimpleCase(row)"
+              v-loading.fullscreen.lock="fullscreenLoading"
+              element-loading-text="用例执行中"
+            >执行</el-button>
+            <el-button type="text" @click="handleRelationApi(row)">关联接口</el-button>
+          </el-row>
+          <el-row>
+            <el-button type="text" @click="lookcaseRecord" v-if="caserecordId !== null && caserecordId !== 'undefined'">查看报告</el-button>
+            <el-button type="text" @click="handleUpdate(row)">编辑</el-button>
+            <el-button type="text" style="color: #f95359" @click="deleteProject(row)">删除</el-button>
+          </el-row>
         </template>
       </el-table-column>
     </el-table>
@@ -91,17 +101,32 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+    <el-dialog title="测试报告" :visible.sync="dialogvisibleReport" width="1000px">
+      <SimpleCase :apicase="caseinformation" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getUserId } from '../../utils/user'
-import { caseAdd, caseDelete, caseList, caseUpdate, simplecaseRun, caseInfo } from '../../api/case'
+import {
+  caseAdd,
+  caseDelete,
+  caseList,
+  caseUpdate,
+  caseInfo,
+  simplecaserecordRun,
+  caserecordAdd,
+  caserecordInfo
+} from '../../api/case'
 import { apiinfoList } from '../../api/apiinfo'
+import SimpleCase from '../../components/SimpleCase/index'
 
 export default {
   name: 'project',
   inject: ['reload'],
+  components: { SimpleCase },
   computed: {
     user () {
       return getUserId()
@@ -132,6 +157,8 @@ export default {
       // 用例执行时的loading
       fullscreenLoading: false,
       timer: '',
+      dialogvisibleReport: false,
+      caseinformation: null,
 
       success: false,
 
@@ -172,7 +199,10 @@ export default {
         caseName: [
           { required: true, message: '请输入用例名称', trigger: 'blur' }
         ]
-      }
+      },
+      caserecordId: null,
+      // 报告详情
+      caserecorddetail: null
     }
   },
   created () {
@@ -180,7 +210,7 @@ export default {
     this.getapiList()
   },
   mounted () {
-    // this.timer = setTimeout(this.getCaseinfo, 1000)
+    this.getCaseinfo(this.caseinformation.id)
   },
   methods: {
     fetchData () {
@@ -198,14 +228,15 @@ export default {
       })
     },
 
-    getCaseinfo (id) {
+    getCaseRecordinfo (id) {
       this.fullscreenLoading = true
       caseInfo(id).then(res => {
         this.success = res.data.success
+        this.caseinformation = res.data
       })
       if (!this.success) {
         const _this = this
-        this.timer = setTimeout(function () { _this.getCaseinfo(id) }, 1000)
+        this.timer = setTimeout(function () { _this.getCaseRecordinfo(id) }, 1000)
       }
       if (this.success) {
         this.fullscreenLoading = false
@@ -215,10 +246,26 @@ export default {
 
     // 单场景测试用例执行
     runSimpleCase (row) {
-      simplecaseRun(row).then(res => {
-        if (res.code === 20000) {
-          this.getCaseinfo(row.id)
-        }
+      caserecordAdd({ case: row.id }).then(response => {
+        this.caserecordId = response.data.id
+        simplecaserecordRun({ caserecordId: this.caserecordId }).then(res => {
+          if (res.code === 20000) {
+            this.fetchData()
+            this.$notify({
+              title: '成功',
+              message: '请求成功',
+              type: 'success',
+              duration: 2000
+            })
+          }
+        })
+      })
+    },
+
+    lookcaseRecord () {
+      caserecordInfo(this.caserecordId).then(res => {
+        this.caserecorddetail = res.data.results[0]
+        this.dialogvisibleReport = true
       })
     },
 
@@ -374,5 +421,9 @@ export default {
 .tag-span {
   margin: 0 20px 0 20px;
   font-weight: bold;
+}
+.el-table .cell {
+  text-align: center;
+  white-space: pre-line;/*保留换行符*/
 }
 </style>
