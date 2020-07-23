@@ -1,17 +1,23 @@
 <template>
   <div class="logo">
-    <router-link to="/">
-      <img :src="logo" class="sidebar-logo-link"/>
-    </router-link>
-    <el-dropdown>
-      <div class="project-title">
-        {{titlename}}
-        <i class="el-icon-arrow-down el-icon--right right-icon"></i>
-      </div>
-      <el-dropdown-menu>
-        <el-dropdown-item v-for="item in list" :key="item.id" @click.native="handlesetProjects(item.id, item.projectName)">{{item.projectName}}</el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
+    <el-row :gutter="10">
+      <el-col :span="4">
+        <router-link to="/">
+          <img :src="logo" class="sidebar-logo-link"/>
+        </router-link>
+      </el-col>
+      <el-col :span="20">
+        <el-dropdown>
+          <div class="project-title">
+            {{titlename}}
+            <i class="el-icon-arrow-down el-icon--right right-icon"></i>
+          </div>
+          <el-dropdown-menu>
+            <el-dropdown-item v-for="item in list" :key="item.id" @click.native="handlesetProjects(item.id, item.projectName)">{{item.projectName}}</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </el-col>
+    </el-row>
   </div>
 </template>
 

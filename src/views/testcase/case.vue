@@ -40,18 +40,17 @@
       <el-table-column label="操作" align="center" width="250px">
         <template slot-scope="{row}">
           <el-row>
+
+<!--            <el-button type="text" @click="handleRelationApi(row)">关联接口</el-button>-->
+          </el-row>
+          <el-row>
             <el-button
               type="text"
               @click="runSimpleCase(row)"
               v-loading.fullscreen.lock="fullscreenLoading"
               element-loading-text="用例执行中"
             >执行</el-button>
-            <el-button type="text" @click="handleRelationApi(row)">关联接口</el-button>
-          </el-row>
-          <el-row>
-            <router-link :to="{name:'CaseRecord', params: {id: row.id}}">
-              <el-button type="text" >查看</el-button>
-            </router-link>
+            <el-button type="text" @click="getLastCaseRecotd(row)">查看</el-button>
             <el-button type="text" @click="handleUpdate(row)">编辑</el-button>
             <el-button type="text" style="color: #f95359" @click="deleteProject(row)">删除</el-button>
           </el-row>
@@ -77,6 +76,16 @@
         </el-form-item>
         <el-form-item label="用例名称:" prop="projectUrl">
           <el-input v-model="projectForm.caseName" placeholder="请输入用例名称" />
+        </el-form-item>
+        <el-form-item label="关联接口:" prop="interface">
+          <el-select v-model="projectForm.interface" filterable placeholder="请选择">
+            <el-option
+              v-for="item in apiinfolist"
+              :key="item.id"
+              :value="item.id"
+              :label="item.apiName"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="用例描述:" prop="projectDesc">
           <el-input
@@ -135,7 +144,7 @@ import {
   caseInfo,
   simplecaserecordRun,
   caserecordAdd,
-  caserecordInfo
+  caserecordInfo, simplecaserecordLast
 } from '../../api/case'
 import { apiinfoList } from '../../api/apiinfo'
 import SimpleCase from '../../components/SimpleCase/index'
@@ -201,8 +210,8 @@ export default {
       dialogvisibleTitle: null,
       dialogvisibleForm: false,
       titleMap: {
-        updated: '编辑项目',
-        created: '创建项目'
+        updated: '编辑用例',
+        created: '创建用例'
       },
 
       projectForm: {
@@ -212,7 +221,7 @@ export default {
         caseDesc: '',
         createdUser: this.user,
         updatedUser: this.user,
-        interface: ''
+        interface: null
       },
       projectrule: {
         caseNum: [
@@ -273,6 +282,14 @@ export default {
       this.dialogvisibleApiInfo = true
     },
 
+    // 获取最新一条测试报告
+    getLastCaseRecotd (row) {
+      simplecaserecordLast({ caseId: row.id }).then(res => {
+        this.caseinformation = res.data
+        this.dialogvisibleReport = true
+      })
+    },
+
     // 单场景测试用例执行
     runSimpleCase (row) {
       caserecordAdd({ case: row.id }).then(response => {
@@ -280,6 +297,7 @@ export default {
         simplecaserecordRun({ caserecordId: this.caserecordId }).then(res => {
           if (res.code === 20000) {
             this.fetchData()
+            location.reload()
             this.$notify({
               title: '成功',
               message: '请求成功',
@@ -306,7 +324,7 @@ export default {
         caseDesc: '',
         createdUser: this.user,
         updatedUser: this.user,
-        interface: ''
+        interface: null
       }
     },
 
@@ -445,7 +463,7 @@ export default {
   width: 400px;
 }
 .el-select {
-  width: 280px;
+  width: 400px;
 }
 .tag-span {
   margin: 0 20px 0 20px;

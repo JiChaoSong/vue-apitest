@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <h2 class="report_title">*{{ apicase.caseName }}*</h2>
+    <h2 class="report_title">*{{ apicase.case.caseName }}*</h2>
     <h1 class="report_title">测试用例报告单</h1>
     <div class="info_table">
       <div class="result_table_title">用例信息</div>
@@ -10,7 +10,7 @@
             <td>
               <el-row :gutter="1">
                 <el-col :span="col1">用例编号</el-col>
-                <el-col :span="col2">{{ apicase.caseNum }}</el-col>
+                <el-col :span="col2">{{ apicase.case.caseNum }}</el-col>
               </el-row>
             </td>
             <td rowspan="4"></td>
@@ -19,7 +19,7 @@
             <td>
               <el-row :gutter="1">
                 <el-col :span="col1">用例名称</el-col>
-                <el-col :span="col2">{{ apicase.caseName }}</el-col>
+                <el-col :span="col2">{{ apicase.case.caseName }}</el-col>
               </el-row>
             </td>
           </tr>
@@ -27,67 +27,23 @@
             <td>
               <el-row :gutter="1">
                 <el-col :span="col1">开始时间</el-col>
-                <el-col :span="col2">{{ apicase.startTime }}</el-col>
+                <el-col :span="col2">{{ apicase.startTime | formatDate }}</el-col>
               </el-row>
             </td>
           </tr>
-<!--          <tr>-->
-<!--            <td>-->
-<!--              <el-row :gutter="1">-->
-<!--                <el-col :span="col1">运行时间</el-col>-->
-<!--                <el-col :span="col2">{{ apicase.runcost }}s</el-col>-->
-<!--              </el-row>-->
-<!--            </td>-->
-<!--          </tr>-->
+          <tr>
+            <td>
+              <el-row :gutter="1">
+                <el-col :span="col1">运行时长</el-col>
+                <el-col :span="col2">{{ apicase.responseTime }}s</el-col>
+              </el-row>
+            </td>
+          </tr>
         </table>
       </div>
     </div>
     <div>
       <div class="result_table_title">接口信息</div>
-      <!-- <div class="table-box info-table">
-        <table cellpadding="0" cellspacing="0">
-          <tr>
-            <td width="33%">
-              <el-row gutter="1">
-                <el-col :span="col1">用例编号</el-col>
-                <el-col :span="col2">{{ apicase.caseNum }}</el-col>
-              </el-row>
-            </td>
-            <td width="33%">
-              <el-row gutter="1">
-                <el-col :span="col1">用例名称</el-col>
-                <el-col :span="col2">{{ apicase.caseName }}</el-col>
-              </el-row>
-            </td>
-            <td width="33%">
-              <el-row gutter="1">
-                <el-col :span="col1">请求方法</el-col>
-                <el-col :span="col2">{{ apicase.apimethod }}</el-col>
-              </el-row>
-            </td>
-          </tr>
-          <tr>
-            <td width="33%">
-              <el-row gutter="1">
-                <el-col :span="col1">所属项目</el-col>
-                <el-col :span="col2">{{ apicase.projectname }}</el-col>
-              </el-row>
-            </td>
-            <td width="33%">
-              <el-row gutter="1">
-                <el-col :span="col1">测试负责人</el-col>
-                <el-col :span="col2">{{ apicase.apiuser }}</el-col>
-              </el-row>
-            </td>
-            <td width="33%">
-              <el-row gutter="1">
-                <el-col :span="col1">上次执行时间</el-col>
-                <el-col :span="col2">{{ apicase.runnedTime | formatDate }}</el-col>
-              </el-row>
-            </td>
-          </tr>
-        </table>
-      </div>-->
       <el-table
         :data="apiInfo"
         border
@@ -96,7 +52,7 @@
       >
         <el-table-column type="expand">
           <template>
-            <JsonViewer :value="caseresult" :expand-depth="20" copyable />
+            <ApiDetail :caseresult="apicase"  />
           </template>
         </el-table-column>
         <el-table-column label="#" align="center" width="50px">
@@ -123,10 +79,10 @@
 </template>
 
 <script>
-import JsonViewer from 'vue-json-viewer'
+import ApiDetail from './components/apidetail'
 export default {
   name: 'Index',
-  components: { JsonViewer },
+  components: { ApiDetail },
   props: {
     // apicasereport: {
     //   type: Object,
@@ -141,7 +97,7 @@ export default {
     return {
       col1: 11,
       col2: 13,
-      apiInfo: [this.apicase.apiInfo],
+      apiInfo: [this.apicase.case.apiInfo],
       caseresult: null
     }
   },
@@ -156,9 +112,9 @@ export default {
       this.$refs.table.toggleRowExpansion(row)
       this.$refs.table.toggleRowSelection(row)
       try {
-        this.caseresult = JSON.parse(this.apicase.caseResult)
+        this.caseresult = JSON.parse(this.apicase.responseBody)
       } catch {
-        this.caseresult = this.apicase.caseResult
+        this.caseresult = this.apicase.responseBody
       }
     }
   }

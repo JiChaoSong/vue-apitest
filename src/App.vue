@@ -33,5 +33,6 @@ export default {
 <style>
   #app {
     background-color: #F2F6FC;
+    min-width: 1920px;
   }
 </style>

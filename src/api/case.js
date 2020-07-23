@@ -91,3 +91,11 @@ export function simplecaserecordRun (data) {
     data
   })
 }
+
+export function simplecaserecordLast (data) {
+  return request({
+    url: '/caserecord/last',
+    method: 'post',
+    data
+  })
+}
