@@ -1,7 +1,25 @@
 <template>
-  <div class="main-view">
-    <router-view/>
-  </div>
+  <el-container style="height: 100%">
+    <el-aside>
+      <el-menu
+        :default-active="activemenu"
+        router
+        style="height: 100%"
+      >
+        <div v-for="route in routers" :key="route.path">
+          <el-menu-item v-if="!route.hidden"  :index="resolepath(route.path)" :route="resolepath(route.path)"  >
+            {{route.meta.title}}
+          </el-menu-item>
+        </div>
+      </el-menu>
+    </el-aside>
+
+    <el-main>
+      <div class="main-view">
+        <router-view/>
+      </div>
+    </el-main>
+  </el-container>
 </template>
 
 <script>

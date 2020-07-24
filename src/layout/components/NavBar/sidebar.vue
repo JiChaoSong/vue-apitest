@@ -61,7 +61,7 @@ export default {
   }
   .header-sidebar {
     width: 100%;
-    padding: 0 10% 0 10%;
+    padding: 0 20px 0 20px;
     position: relative;
   }
   .header-logo{

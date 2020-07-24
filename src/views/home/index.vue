@@ -1,24 +1,22 @@
 <template>
-  <div class="app-container">
-    <div class="container">
-      <el-row :gutter="10">
-        <el-col :span="span1">
-          <div class="card-content">
-            项目总数: {{list.projectCount}}
-          </div>
-        </el-col>
-        <el-col :span="span1">
-          <div class="card-content">
-            接口总数: {{list.apiCount}}
-          </div>
-        </el-col>
-        <el-col :span="span1">
-          <div class="card-content">
-            用例总数: {{list.caseCount}}
-          </div>
-        </el-col>
-      </el-row>
-    </div>
+  <div class="container">
+    <el-row :gutter="10">
+      <el-col :span="span1">
+        <div class="card-content">
+          项目总数: {{list.projectCount}}
+        </div>
+      </el-col>
+      <el-col :span="span1">
+        <div class="card-content">
+          接口总数: {{list.apiCount}}
+        </div>
+      </el-col>
+      <el-col :span="span1">
+        <div class="card-content">
+          用例总数: {{list.caseCount}}
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 

@@ -1,26 +1,6 @@
 <template>
   <div class="system-container">
-    <el-row :gutter="20">
-      <el-col :span="4">
-        <div class="menu-li">
-          <el-menu
-            :default-active="activemenu"
-            router
-          >
-            <div v-for="route in routers" :key="route.path">
-              <el-menu-item v-if="!route.hidden"  :index="resolepath(route.path)" :route="resolepath(route.path)"  >
-                {{route.meta.title}}
-              </el-menu-item>
-            </div>
-          </el-menu>
-        </div>
-      </el-col>
-      <el-col :span="20">
-        <div class="main-view">
-          <router-view/>
-        </div>
-      </el-col>
-    </el-row>
+    <router-view/>
   </div>
 </template>
 
@@ -66,11 +46,13 @@ export default {
 
 <style scoped>
   .system-container {
-    padding: 20px;
+    /*padding: 20px;*/
+    /*height: 100%;*/
   }
   .menu-li {
     text-align: center;
     width: 100%;
+    height: 100%;
     background-color: white;
     border-radius: 5px;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
@@ -91,5 +73,16 @@ export default {
   .el-menu-item {
     font-size: 20px !important;
     text-align: center !important;
+  }
+
+  .el-menu {
+  height: 100%;
+  }
+
+  .el-aside{
+    /*height: 100%;*/
+    line-height: 100%;
+    background-color: #d3dce6;
+    color: #333;
   }
 </style>

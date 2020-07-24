@@ -1,5 +1,5 @@
 <template>
-  <div class>
+  <div class="container">
     <el-tabs v-model="editableTabsValue" @tab-remove="removeTab" type="border-card">
       <el-tab-pane
         v-for="item in editableTabs"
@@ -332,8 +332,12 @@ export default {
 
 <style scoped>
 .apitest-container {
-  width: 100%;
+  /*width: 100%;*/
   padding: 20px;
+}
+.container {
+  min-width: 800px;
+  padding-right: 20px;
 }
 .el-tabs {
   border-radius: 5px !important;

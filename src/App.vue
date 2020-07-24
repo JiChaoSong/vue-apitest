@@ -34,5 +34,7 @@ export default {
   #app {
     background-color: #F2F6FC;
     min-width: 1920px;
+    height: 100%;
+    position: absolute;
   }
 </style>

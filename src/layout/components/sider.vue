@@ -1,13 +1,25 @@
 <template>
-  <div class="main-view">
-    <router-view/>
-  </div>
+  <el-menu
+    :default-active="activemenu"
+    router
+    style="height: 100%"
+    background-color="rgb(0, 21, 41)"
+    text-color="#fffaff"
+    active-text-color="#1890ff"
+  >
+    <div v-for="route in routers" :key="route.path" class="menutitle">
+      <el-menu-item v-if="!route.hidden"  :index="resolepath(route.path)" :route="resolepath(route.path)"  >
+        {{route.meta.title}}
+      </el-menu-item>
+    </div>
+  </el-menu>
 </template>
 
 <script>
 import path from 'path'
+
 export default {
-  name: 'index',
+  name: 'sider',
   data () {
     return {
       routes: this.$router.options.routes,
@@ -68,32 +80,30 @@ export default {
 </script>
 
 <style scoped>
-  .system-container {
-    /*padding: 20px;*/
+  .el-menu{
+    font-size: 20px;
   }
-  .menu-li {
-    text-align: center;
-    width: 100%;
-    height: 200px;
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  .menutitle {
+    /*width: 100%;*/
   }
-
-  .main-view {
-    padding: 20px;
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
-  }
-
   .el-menu-item.is-active {
-    color: #1890ff !important;
+    color: white !important;
+    /*border-right: 5px solid #1890ff !important;*/
+    background-color: #1890ff !important;
+
   }
   .el-menu-item:not(.is-disabled):hover {
+    background-color: #1890ff !important;
+  }
+  .el-menu-item:focus {
+    background-color: #1890ff !important;
+  }
+  .el-submenu:hover.el-submenu__title {
+    background-color: #1890ff !important;
   }
   .el-menu-item {
-    font-size: 20px !important;
+    font-size: 16px !important;
+    /*width: 100px !important;*/
     text-align: center !important;
   }
 </style>
