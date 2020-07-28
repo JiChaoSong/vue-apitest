@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // import Home from '../views/home/index'
-import Interface from '../views/apitest/index'
+// import Interface from '../views/apitest/index'
 import layoutMenu from '../views/layout/index'
 import Layout from '../layout'
 Vue.use(VueRouter)
@@ -50,21 +50,29 @@ export const constantRouterMap = [
       {
         path: 'index',
         name: 'Api',
-        component: Interface,
+        component: layoutMenu,
         meta: { activeMenu: '/apitest', parentPath: '/apitest/index' },
-        redirect: '/apitest/index/list',
+        redirect: '/apitest/index/setapi',
         children: [
           {
             path: 'list',
             name: 'ApiList',
             component: () => import(/* webpackChunkName: "about" */ '../views/apitest/list'),
-            meta: { title: '接口列表', activeMenu: '/apitest' }
+            meta: { title: '接口列表', activeMenu: '/apitest' },
+            hidden: true
           },
           {
             path: 'setapi',
             name: 'SetApi',
             component: () => import(/* webpackChunkName: "about" */ '../views/setapitest/index'),
             meta: { title: '集合测试', activeMenu: '/apitest' }
+          },
+          {
+            path: 'create',
+            name: 'Create',
+            component: () => import('../views/setapitest/create'),
+            meta: { title: '新增接口', activeMenu: '/apitest', index: '/apitest/index/setapi' },
+            hidden: true
           }
         ]
 

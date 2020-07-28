@@ -337,7 +337,7 @@ export default {
 }
 .container {
   min-width: 800px;
-  padding-right: 20px;
+  /*padding-right: 20px;*/
 }
 .el-tabs {
   border-radius: 5px !important;
