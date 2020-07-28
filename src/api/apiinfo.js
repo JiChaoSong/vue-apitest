@@ -8,6 +8,13 @@ export function apiinfoList (param) {
   })
 }
 
+export function getapiinfo (id) {
+  return request({
+    url: '/apiinfo/' + id + '/',
+    method: 'get'
+  })
+}
+
 export function apiinfoAdd (data) {
   return request({
     url: '/apiinfo/',

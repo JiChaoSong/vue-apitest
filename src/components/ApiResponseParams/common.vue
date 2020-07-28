@@ -1,14 +1,14 @@
 <template>
   <el-table :data="list" size="mini">
-    <el-table-column label="#" type="index"></el-table-column>
+    <el-table-column label="#" type="index" width="50px"></el-table-column>
     <el-table-column label="参数" align="center">
       <template slot-scope="scope">
         <el-input v-model="scope.row.param" :size="inputsize"/>
       </template>
     </el-table-column>
-    <el-table-column label="类型" align="center" width="100px">
+    <el-table-column label="类型" align="center" width="120px">
       <template slot-scope="scope">
-        <el-select v-model="scope.row.type" :size="inputsize">
+        <el-select v-model="scope.row.type" :size="inputsize" filterable allow-create>
           <el-option v-for="item in datatype" :key="item.value" :value="item.value" :label="item.label"/>
         </el-select>
       </template>
@@ -35,10 +35,32 @@
         <el-input v-model="scope.row.remark" :size="inputsize"/>
       </template>
     </el-table-column>
-    <el-table-column label="操作" align="center">
+    <el-table-column label="操作" align="center" width="150">
+      <template slot="header">
+        <el-button
+          v-if="list.length === 0"
+          type="text"
+          @click="addline(list)"
+        >
+          新增
+        </el-button>
+      </template>
       <template slot-scope="scope">
-        <el-button type="text">新增</el-button>
-        <el-button type="text" style="color: #f95359">删除</el-button>
+        <el-button
+          v-if="scope.$index === list.length -1"
+          type="text"
+          @click="addline(list)"
+        >
+          新增
+        </el-button>
+        <el-button
+          v-if="list.length !== 1"
+          type="text"
+          style="color: #f95359"
+          @click="deleteline(scope.$index, list)"
+        >
+          删除
+        </el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -49,42 +71,46 @@ import { allEnums } from '../../utils/enum'
 
 export default {
   name: 'common',
+  props: {
+    list: {
+      type: Array,
+      required: true
+    }
+  },
   data () {
     return {
-      inputsize: 'mini',
+      inputsize: '',
       datatype: allEnums.paramType,
 
       isenble: [
         { value: '是', label: '是' },
         { value: '否', label: '否' }
       ],
-
-      list: [
+      datalist: [
         {
-          param: 'username',
-          desc: '用户名',
+          param: null,
+          desc: null,
           type: 'String',
-          isBoolean: '是',
-          example: '示例',
-          remark: '备注'
-        },
-        {
-          param: 'username',
-          desc: '用户名',
-          type: 'String',
-          isBoolean: '是',
-          example: '示例',
-          remark: '备注'
-        },
-        {
-          param: 'username',
-          desc: '用户名',
-          type: 'String',
-          isBoolean: '是',
-          example: '示例',
-          remark: '备注'
+          isBoolean: '否',
+          example: null,
+          remark: null
         }
       ]
+    }
+  },
+  methods: {
+    addline (data) {
+      data.push({
+        param: null,
+        desc: null,
+        type: 'String',
+        isBoolean: '否',
+        example: null,
+        remark: null
+      })
+    },
+    deleteline (index, data) {
+      data.splice(index, 1)
     }
   }
 }

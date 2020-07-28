@@ -36,7 +36,7 @@ export const constantRouterMap = [
         path: 'index',
         component: () => import('../views/home/index'),
         name: 'Dashboard',
-        meta: { title: '用例管理', activeMenu: '/home' }
+        meta: { title: '首页', activeMenu: '/home' }
       }
     ],
     meta: { title: '首页' }
@@ -51,7 +51,7 @@ export const constantRouterMap = [
         path: 'index',
         name: 'Api',
         component: layoutMenu,
-        meta: { activeMenu: '/apitest', parentPath: '/apitest/index' },
+        meta: { title: null, activeMenu: '/apitest', parentPath: '/apitest/index' },
         redirect: '/apitest/index/setapi',
         children: [
           {
@@ -72,6 +72,13 @@ export const constantRouterMap = [
             name: 'Create',
             component: () => import('../views/setapitest/create'),
             meta: { title: '新增接口', activeMenu: '/apitest', index: '/apitest/index/setapi' },
+            hidden: true
+          },
+          {
+            path: 'detail',
+            name: 'Detail',
+            component: () => import('../views/setapitest/detail'),
+            meta: { title: '接口详情', activeMenu: '/apitest', index: '/apitest/index/setapi' },
             hidden: true
           }
         ]

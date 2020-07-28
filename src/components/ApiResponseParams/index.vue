@@ -1,23 +1,29 @@
 <template>
   <el-tabs v-model="activeName">
     <el-tab-pane label="Query参数" name="first">
-      <common/>
+      <common :list="requestparams.apiParams"/>
     </el-tab-pane>
     <el-tab-pane label="请求头" name="second">
-      <header/>
+      <Header/>
     </el-tab-pane>
     <el-tab-pane label="请求体" name="third">
-      <common/>
+      <common :list="requestparams.apiBody"/>
     </el-tab-pane>
   </el-tabs>
 </template>
 
 <script>
 import common from './common'
-import header from './header'
+import Header from './header'
 export default {
   name: 'index',
-  components: { common, header },
+  props: {
+    requestparams: {
+      type: Object,
+      required: true
+    }
+  },
+  components: { common, Header },
   data () {
     return {
       activeName: 'first'

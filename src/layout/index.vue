@@ -9,6 +9,11 @@
       </el-aside>
       <el-container>
         <el-main>
+<!--          <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">-->
+<!--            <el-breadcrumb-item v-for="item in breadcurmlist" :key="item.path" :to="{path: item.path}">-->
+<!--              {{item.meta.title}}-->
+<!--            </el-breadcrumb-item>-->
+<!--          </el-breadcrumb>-->
           <AppMain/>
         </el-main>
       </el-container>
@@ -37,7 +42,23 @@ export default {
   computed: {
     path () {
       return this.$route.path
+    },
+    breadcurmlist () {
+      var routers = this.$route.matched
+      for (var i = 0; i <= routers.length; i++) {
+        console.log(routers[i])
+      }
+      return routers
     }
+
+  },
+  created () {
+    this.breadcurmlist()
+  },
+  methods: {
+    // breadcurmlist () {
+    //   console.log(this.$route.matched)
+    // }
   }
 }
 </script>
@@ -71,5 +92,7 @@ export default {
     height: 35px;
     vertical-align: middle;
   }
-
+  .breadcrumb {
+    padding: 0 20px 20px 0;
+  }
 </style>

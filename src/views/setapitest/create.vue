@@ -4,7 +4,6 @@
       <el-tab-pane label="接口信息" name="first">
         <CreateDesc/>
       </el-tab-pane>
-      <el-tab-pane label="返回示例" name="second">返回示例</el-tab-pane>
     </el-tabs>
   </div>
 </template>

@@ -10,6 +10,7 @@
       :data="list"
       stripe
       size="small"
+      @row-click="apiDetail"
       :row-style="{height: '20px'}"
       :cell-style="{padding:'5px'}"
     >
@@ -110,6 +111,12 @@ export default {
     },
     indexMethod (index) {
       return (this.listQuery.page - 1) * this.listQuery.size + (index + 1)
+    },
+    apiDetail (row) {
+      this.$router.push({
+        name: 'Detail',
+        query: { id: row.id }
+      })
     }
   }
 }
