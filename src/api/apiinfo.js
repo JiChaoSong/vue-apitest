@@ -53,3 +53,11 @@ export function apiinfoImport (data) {
     data
   })
 }
+
+export function apiinfoTest (data) {
+  return request({
+    url: '/apiinfo/test',
+    method: 'post',
+    data
+  })
+}

@@ -2,56 +2,296 @@
   <div class="app-container">
     <div class="path-button">
       <el-row :gutter="10">
-        <el-col :span="16">
+        <el-col :span="20">
           <el-input v-model="requestData.apiPath">
-            <el-select  :value="requestData.apiMethod" slot="prepend" class="select-method">
+            <el-select  v-model="requestData.apiMethod" slot="prepend" class="select-method">
               <el-option v-for="item in methons" :key="item.value" :label="item.label" :value="item.value"/>
             </el-select>
           </el-input>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="4">
+          <el-button type="success" @click="handleCreateCase">
+            新建用例
+          </el-button>
           <el-button type="primary" @click="subcommit">
             测试
           </el-button>
         </el-col>
       </el-row>
     </div>
+    <div>
+      <h4 class="title">Request
+      </h4>
+
+      <el-tabs v-model="activeName" type="card">
+        <el-tab-pane label="Query参数" name="first" >
+          <common :request-data="requestData.apiParams"/>
+        </el-tab-pane>
+        <el-tab-pane label="请求头" name="second">
+          <common :request-data="requestData.apiHeaders" lables="header"/>
+        </el-tab-pane>
+        <el-tab-pane label="请求体" name="third">
+          <common :request-data="requestData.apiBody" lables="body"/>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
+    <div>
+      <h4 class="title">Response</h4>
+      <el-tabs v-model="responseName"  type="card">
+        <el-tab-pane label="响应头" name="first" >
+          <JsonViewer :value="testResult.responseHeader" style="width: 70%"/>
+        </el-tab-pane>
+        <el-tab-pane label="响应体" name="second">
+          <JsonViewer :value="testResult.responseBody"/>
+        </el-tab-pane>
+        <el-tab-pane label="请求头" name="third">
+          <JsonViewer :value="testResult.requestHeader"/>
+        </el-tab-pane>
+        <el-tab-pane label="请求体" name="four">
+          <JsonViewer :value="testResult.requestBody"/>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
+
+    <el-dialog title="测试用例" :visible.sync="dialogvisibleForm" width="1200px" class="create-case-dialog">
+      <el-form ref="caseDataForm" :model="caseData" :rules="caseDataRule" label-position="top">
+        <el-form-item label="用例编号" prop="caseNum">
+          <el-input v-model="caseData.caseNum"/>
+        </el-form-item>
+        <el-form-item label="用例名称" prop="caseName">
+          <el-input v-model="caseData.caseName"/>
+        </el-form-item>
+        <el-form-item label="请求参数">
+          <el-tabs v-model="caseActiveName" type="card">
+            <el-tab-pane label="Query参数" name="first" >
+              <common :request-data="caseData.apiParams"/>
+            </el-tab-pane>
+            <el-tab-pane label="请求头" name="second">
+              <common :request-data="caseData.apiHeaders" lables="header"/>
+            </el-tab-pane>
+            <el-tab-pane label="请求体" name="third">
+              <common :request-data="caseData.apiBody" lables="body"/>
+            </el-tab-pane>
+          </el-tabs>
+        </el-form-item>
+
+        <el-form-item label="断言">
+          <div class="assert-style">
+            <div class="radio-style">
+              <el-radio-group v-model="assertActive">
+                <el-radio v-for="item in assertype" :label="item.value" :key="item.value">{{item.label}}</el-radio>
+              </el-radio-group>
+            </div>
+            <div class="select-assert" >
+              <el-form-item label="http状态码" v-show="assertActive === 101">
+                <el-select v-model="caseData.apiAssert.httpcode" >
+                  <el-option v-for="item in httpcode" :key="item.value" :value="item.value" :label="item.label"/>
+                </el-select>
+              </el-form-item>
+
+              <el-form-item label="响应code" v-show="assertActive === 102">
+                <el-select v-model="caseData.apiAssert.responsecode" >
+                  <el-option v-for="item in respcode" :key="item.value" :value="item.value" :label="item.label"/>
+                </el-select>
+              </el-form-item>
+
+              <el-form-item label="匹配的值" v-show="assertActive===103">
+                <el-input v-model="caseData.apiAssert.fullMatch" />
+              </el-form-item>
+
+              <el-form-item label="响应时间" v-show="assertActive===104">
+                <el-input v-model="caseData.apiAssert.responseTime" />
+              </el-form-item>
+            </div>
+          </div>
+
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-
+import common from './common'
+import JsonViewer from 'vue-json-viewer'
+import { apiinfoTest } from '../../../api/apiinfo'
+import { getUserId } from '../../../utils/user'
 export default {
   name: 'ApiTest',
   props: {
-    apiInfomation: {
+    testapiinfo: {
       type: Object,
       required: true
     }
   },
+  components: { common, JsonViewer },
   data () {
     return {
       methons: this.allEnums.requestMethod,
+      assertype: this.allEnums.assertType,
+      httpcode: this.allEnums.httpCode,
+      respcode: this.allEnums.responseCode,
+      assertActive: 101,
+      activeName: 'first',
+      caseActiveName: 'first',
+      responseName: 'first',
+      testResult: {},
+      caseData: {
+        id: undefined,
+        caseNum: '',
+        caseName: '',
+        caseDesc: '',
+        apiParams: null,
+        apiHeaders: null,
+        apiBody: null,
+        apiAssert: {
+          type: this.assertActive,
+          httpcode: null,
+          responsecode: null,
+          responseTime: null,
+          // 全文匹配
+          fullMatch: null
+        },
+        createdUser: this.user,
+        updatedUser: this.user,
+        interface: this.$route.query.id
+      },
 
-      requestData: this.apiInfomation
+      caseDataRule: {
+        caseNum: [
+          { required: true, message: '请输入用例编号', trigger: 'blur' }
+        ],
+        caseName: [
+          { required: true, message: '请输入用例名称', trigger: 'blur' }
+        ]
+      },
+
+      dialogvisibleForm: false
+
     }
   },
   created () {
-
+  },
+  computed: {
+    requestData () {
+      var info = this.testapiinfo
+      if (info.apiParams === null) {
+        info.apiParams = [{
+          param: null,
+          desc: null,
+          type: 'String',
+          value: null
+        }]
+      } if (info.apiHeaders === null) {
+        info.apiHeaders = [
+          {
+            param: null,
+            desc: null,
+            type: 'String',
+            value: null
+          }
+        ]
+      } if (info.apiBody === null) {
+        info.apiBody = [{
+          param: null,
+          desc: null,
+          type: 'String',
+          value: null
+        }]
+      }
+      return info
+    },
+    user () {
+      return getUserId()
+    }
   },
   methods: {
     subcommit () {
-      console.log(this.requestData)
+      apiinfoTest(this.requestData).then(res => {
+        this.testResult = res.data
+        try {
+          this.testResult.responseBody = JSON.parse(this.testResult.responseBody)
+        } catch {
+        }
+        if (res.code === 20000) {
+          this.$notify({
+            title: '成功',
+            message: '请求成功',
+            type: 'success',
+            duration: 2000
+          })
+        } else {
+          this.$notify({
+            title: '失败',
+            message: res.message,
+            type: 'danger',
+            duration: 2000
+          })
+        }
+      })
+    },
+
+    resetCaeData () {
+      this.caseData = {
+        id: undefined,
+        caseNum: '',
+        caseName: '',
+        caseDesc: '',
+        apiParams: this.requestData.apiParams,
+        apiHeaders: this.requestData.apiHeaders,
+        apiBody: this.requestData.apiBody,
+        apiAssert: {
+          type: this.assertActive,
+          httpcode: null,
+          responsecode: null,
+          responseTime: null,
+          // 全文匹配
+          fullMatch: null
+        },
+        createdUser: this.user,
+        updatedUser: this.user,
+        interface: this.$route.query.id
+      }
+    },
+
+    handleCreateCase () {
+      this.resetCaeData()
+      this.dialogvisibleForm = true
+      this.$nextTick(() => {
+        this.$refs.caseDataForm.clearValidate()
+      })
     }
+
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss">
   .select-method {
     width: 100px;
   }
   .path-button {
     width: 100%;
+    margin-bottom: 20px;
   }
+  .title {
+    width: 100%;
+    background-color: #f8f8f8;
+    padding: 10px;
+    color: #999999;
+  }
+
+  .assert-style {
+    border: 1px solid #f8f8f8;
+  }
+
+  .radio-style {
+    border-bottom: 1px solid #f8f8f8;
+    padding: 10px;
+  }
+
+  .select-assert {
+    padding: 10px;
+  }
+
 </style>

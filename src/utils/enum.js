@@ -73,5 +73,25 @@ export const allEnums = {
     { value: 'User-Agent', label: 'User-Agent', desc: 'User-Agent的内容包含发出请求的用户信息' },
     { value: 'Via', label: 'Via', desc: '通知中间网关或代理服务器地址，通信协议' },
     { value: 'Warning', label: 'Warning', desc: '关于消息实体的警告信息' }
+  ],
+  assertType: [
+    { value: 101, label: 'HTTP状态码' },
+    { value: 102, label: '响应状态码' },
+    { value: 103, label: '全文匹配' },
+    { value: 104, label: '响应时间' }
+    // { value: 104, label: '状态码断言' },
+    // { value: 105, label: '状态码断言' }
+  ],
+  httpCode: [
+    { value: 101, label: 200 },
+    { value: 102, label: 300 },
+    { value: 103, label: 400 },
+    { value: 104, label: 500 }
+  ],
+  responseCode: [
+    { value: 101, label: 20000 },
+    { value: 102, label: 30001 },
+    { value: 103, label: 40000 },
+    { value: 104, label: 50000 }
   ]
 }

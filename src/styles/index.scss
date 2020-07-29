@@ -92,3 +92,10 @@ div:focus {
 .delete-button {
   color: #f95359
 }
+
+.create-case-dialog {
+  .el-dialog__header {
+    line-height: 40px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+}
