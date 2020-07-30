@@ -44,15 +44,10 @@
     </div>
     <div>
       <div class="result_table_title">接口信息</div>
-      <el-table
-        :data="apiInfo"
-        border
-        ref="table"
-        size="small"
-      >
+      <el-table :data="apiInfo" border ref="table" size="small">
         <el-table-column type="expand">
           <template>
-            <ApiDetail :caseresult="apicase"  />
+            <ApiDetail :caseresult="apicase" />
           </template>
         </el-table-column>
         <el-table-column label="#" align="center" width="50px">
@@ -72,7 +67,6 @@
             <el-button type="text" @click="toogleExpand(props.row)">查看</el-button>
           </template>
         </el-table-column>
-
       </el-table>
     </div>
   </div>
@@ -152,13 +146,13 @@ export default {
 
 table {
   width: 100%;
-  border-bottom: 1px solid #EBEEF5;
-  border-right: 1px solid #EBEEF5;
+  border-bottom: 1px solid #ebeef5;
+  border-right: 1px solid #ebeef5;
 }
 table th,
 table td {
-  border-left: 1px solid #EBEEF5;
-  border-top: 1px solid #EBEEF5;
+  border-left: 1px solid #ebeef5;
+  border-top: 1px solid #ebeef5;
   font-weight: normal;
   font-size: 15px;
   padding: 0 20px 0 20px;

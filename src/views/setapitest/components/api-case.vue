@@ -1,57 +1,41 @@
 <template>
   <div class="app-container">
-    <div class="path-button">
-      <el-row :gutter="10">
-        <el-col :span="20">
-          <el-input v-model="requestData.apiPath">
-            <el-select v-model="requestData.apiMethod" slot="prepend" class="select-method">
-              <el-option
-                v-for="item in methons"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-input>
-        </el-col>
-        <el-col :span="4">
-          <el-button type="success" @click="handleCreateCase">新建用例</el-button>
-          <el-button type="primary" @click="subcommit">测试</el-button>
-        </el-col>
-      </el-row>
+    <div class="operation-container">
+      <el-button type="primary" icon="el-icon-plus" size="small" @click="handleCreateCase">新增</el-button>
     </div>
-    <div>
-      <h4 class="title">Request</h4>
+    <el-table :data="list">
+      <el-table-column type="index" :index="indexMethod" label="#" />
 
-      <el-tabs v-model="activeName" type="card">
-        <el-tab-pane label="Query参数" name="first">
-          <common :request-data="requestData.apiParams" />
-        </el-tab-pane>
-        <el-tab-pane label="请求头" name="second">
-          <common :request-data="requestData.apiHeaders" lables="header" />
-        </el-tab-pane>
-        <el-tab-pane label="请求体" name="third">
-          <common :request-data="requestData.apiBody" lables="body" />
-        </el-tab-pane>
-      </el-tabs>
-    </div>
-    <div>
-      <h4 class="title">Response</h4>
-      <el-tabs v-model="responseName" type="card">
-        <el-tab-pane label="响应头" name="first">
-          <JsonViewer :value="testResult.responseHeader" style="width: 70%" />
-        </el-tab-pane>
-        <el-tab-pane label="响应体" name="second">
-          <JsonViewer :value="testResult.responseBody" />
-        </el-tab-pane>
-        <el-tab-pane label="请求头" name="third">
-          <JsonViewer :value="testResult.requestHeader" />
-        </el-tab-pane>
-        <el-tab-pane label="请求体" name="four">
-          <JsonViewer :value="testResult.requestBody" />
-        </el-tab-pane>
-      </el-tabs>
-    </div>
+      <el-table-column label="用例编号" align="center">
+        <template slot-scope="scope">{{scope.row.caseNum}}</template>
+      </el-table-column>
+      <el-table-column label="用例名称" align="center">
+        <template slot-scope="scope">{{scope.row.caseName}}</template>
+      </el-table-column>
+      <el-table-column label="测试时间" align="center">
+        <template slot-scope="scope">{{scope.row.startTime}}</template>
+      </el-table-column>
+      <el-table-column label="创建者" align="center">
+        <template slot-scope="scope">{{scope.row.created_User}}</template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" width="150">
+        <template slot-scope="scope">
+          <el-button type="text" @click="handleCopyCase(scope.row)">测试</el-button>
+          <el-button type="text" @click="handleCopyCase(scope.row)">复制</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <el-pagination
+      background
+      layout="sizes,prev, pager, next, total"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+      :page-sizes="[10, 20, 50, 100]"
+      :page-size="10"
+      class="page"
+    />
 
     <el-dialog
       title="测试用例"
@@ -139,6 +123,27 @@
         </el-form-item>
         <el-form-item style="text-align:  right">
           <el-button type="primary" @click="createCase">保存</el-button>
+          <el-button @click="handlecancelData">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
+    <el-dialog
+      title="复制测试用例"
+      :visible.sync="dialogvisibleCopy"
+      width="800px"
+      class="create-case-dialog"
+    >
+      <el-form :model="caseCopyData" ref="caseCopyData" :rules="caseDataRule">
+        <el-form-item label="用例编号" prop="caseNum">
+          <el-input v-model="caseCopyData.caseNum" />
+        </el-form-item>
+        <el-form-item label="用例名称" prop="caseName">
+          <el-input v-model="caseCopyData.caseName" />
+        </el-form-item>
+        <el-form-item style="text-align:  right">
+          <el-button type="primary" @click="copyCase">保存</el-button>
+          <el-button @click="handlecancelCopy">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -146,20 +151,21 @@
 </template>
 
 <script>
-import common from './common'
-import JsonViewer from 'vue-json-viewer'
-import { apiinfoTest } from '../../../api/apiinfo'
 import { getUserId } from '../../../utils/user'
-import { caseAdd } from '../../../api/case'
+import { caseAdd, caseCopy } from '../../../api/case'
+
 export default {
-  name: 'ApiTest',
+  name: 'ApiCase',
   props: {
+    list: Array,
+    listQuery: Object,
+    total: Number,
+    fetchData: Function,
     testapiinfo: {
       type: Object,
       required: true
     }
   },
-  components: { common, JsonViewer },
   data () {
     return {
       methons: this.allEnums.requestMethod,
@@ -201,11 +207,15 @@ export default {
         ]
       },
 
-      dialogvisibleForm: false
+      caseCopyData: {
+        id: undefined,
+        caseNum: '',
+        caseName: ''
+      },
 
+      dialogvisibleForm: false,
+      dialogvisibleCopy: false
     }
-  },
-  created () {
   },
   computed: {
     requestData () {
@@ -240,32 +250,22 @@ export default {
       return getUserId()
     }
   },
+  created () {
+  },
   methods: {
-    subcommit () {
-      apiinfoTest(this.requestData).then(res => {
-        this.testResult = res.data
-        try {
-          this.testResult.responseBody = JSON.parse(this.testResult.responseBody)
-        } catch {
-        }
-        if (res.code === 20000) {
-          this.$notify({
-            title: '成功',
-            message: '请求成功',
-            type: 'success',
-            duration: 2000
-          })
-        } else {
-          this.$notify({
-            title: '失败',
-            message: res.message,
-            type: 'danger',
-            duration: 2000
-          })
-        }
-      })
+    indexMethod (index) {
+      return (this.listQuery.page - 1) * this.listQuery.size + (index + 1)
     },
 
+    handleCurrentChange (val) {
+      this.listQuery.page = val
+      this.fetchData()
+    },
+
+    handleSizeChange (val) {
+      this.listQuery.size = val
+      this.fetchData()
+    },
     resetCaeData () {
       this.caseData = {
         id: undefined,
@@ -289,6 +289,14 @@ export default {
       }
     },
 
+    resetCaseCopy () {
+      this.caseCopyData = {
+        id: undefined,
+        caseNum: '',
+        caseName: ''
+      }
+    },
+
     handleCreateCase () {
       this.resetCaeData()
       this.dialogvisibleForm = true
@@ -303,6 +311,7 @@ export default {
           caseAdd(this.caseData).then(res => {
             if (res.code === 20000) {
               this.dialogvisibleForm = false
+              this.fetchData()
               this.$notify({
                 title: '成功',
                 message: '添加成功',
@@ -313,37 +322,49 @@ export default {
           })
         }
       })
+    },
+
+    copyCase () {
+      this.$refs.caseCopyData.validate((valid) => {
+        if (valid) {
+          const tempData = Object.assign({}, this.caseCopyData)
+          caseCopy(tempData).then(res => {
+            if (res.code === 20000) {
+              this.dialogvisibleCopy = false
+              this.fetchData()
+              this.$notify({
+                title: '成功',
+                message: '复制成功',
+                type: 'success',
+                duration: 2000
+              })
+            }
+          })
+        }
+      })
+    },
+
+    handleCopyCase (row) {
+      this.caseCopyData = Object.assign({}, row)
+      this.caseCopyData.caseName = '副本-' + row.caseName
+      this.dialogvisibleCopy = true
+      this.$nextTick(() => {
+        this.$refs.caseCopyData.clearValidate()
+      })
+    },
+
+    handlecancelCopy () {
+      this.resetCaseCopy()
+      this.dialogvisibleCopy = false
+    },
+    handlecancelData () {
+      this.resetCaeData()
+      this.dialogvisibleForm = false
     }
 
   }
 }
 </script>
 
-<style lang="scss">
-.select-method {
-  width: 100px;
-}
-.path-button {
-  width: 100%;
-  margin-bottom: 20px;
-}
-.title {
-  width: 100%;
-  background-color: #f8f8f8;
-  padding: 10px;
-  color: #999999;
-}
-
-.assert-style {
-  border: 1px solid #dcdfe6;
-}
-
-.radio-style {
-  border-bottom: 1px solid #dcdfe6;
-  padding: 10px;
-}
-
-.select-assert {
-  padding: 10px;
-}
+<style scoped>
 </style>

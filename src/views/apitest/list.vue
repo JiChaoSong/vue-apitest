@@ -223,16 +223,17 @@ export default {
 
     importApiInfo () {
       this.$refs.apiImport.validate((valid) => {
-        if (valid) { }
-        apiinfoImport(this.apiImport).then(res => {
-          this.dialogvisibleImport = false
-          this.$notify({
-            title: '成功',
-            message: '导入成功',
-            type: 'success',
-            duration: 2000
+        if (valid) {
+          apiinfoImport(this.apiImport).then(res => {
+            this.dialogvisibleImport = false
+            this.$notify({
+              title: '成功',
+              message: '导入成功',
+              type: 'success',
+              duration: 2000
+            })
           })
-        })
+        }
       })
     },
 

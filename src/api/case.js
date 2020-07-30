@@ -38,6 +38,14 @@ export function caseDelete (id) {
   })
 }
 
+export function caseCopy (data) {
+  return request({
+    url: '/case/copy',
+    method: 'post',
+    data
+  })
+}
+
 export function simplecaseRun (data) {
   return request({
     url: '/case/run',

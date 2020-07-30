@@ -1,6 +1,6 @@
 <template>
   <div class="navbar">
-    <sidebar-item/>
+    <sidebar-item />
   </div>
 </template>
 
@@ -13,10 +13,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .navbar {
-    /*overflow: hidden;*/
-    /*position: relative;*/
-    /*background: #fff;*/
-    /*box-shadow: 0 1px 4px rgba(0,21,41,.08);*/
-  }
+.navbar {
+  /*overflow: hidden;*/
+  /*position: relative;*/
+  /*background: #fff;*/
+  /*box-shadow: 0 1px 4px rgba(0,21,41,.08);*/
+  padding: 0 10% 0 10%;
+}
 </style>

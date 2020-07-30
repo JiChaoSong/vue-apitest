@@ -1,7 +1,9 @@
 <template>
   <div class="app-container">
     <div class="name">
-      <h3><span>{{apiInfomation.apiName}}</span></h3>
+      <h3>
+        <span>{{apiInfomation.apiName}}</span>
+      </h3>
     </div>
 
     <div class="path">
@@ -10,43 +12,31 @@
 
     <h4 class="title">请求参数</h4>
     <el-table :data="apiInfomation.apiBody" border>
-      <el-table-column type="index" label="#"/>
+      <el-table-column type="index" label="#" />
       <el-table-column label="参数" align="center">
-        <template slot-scope="scope">
-          {{scope.row.param}}
-        </template>
+        <template slot-scope="scope">{{scope.row.param}}</template>
       </el-table-column>
       <el-table-column label="类型" align="center" width="100">
-        <template slot-scope="scope">
-          {{scope.row.type}}
-        </template>
+        <template slot-scope="scope">{{scope.row.type}}</template>
       </el-table-column>
       <el-table-column label="必填" align="center" width="80">
-        <template slot-scope="scope">
-          {{scope.row.isBoolean}}
-        </template>
+        <template slot-scope="scope">{{scope.row.isBoolean}}</template>
       </el-table-column>
       <el-table-column label="说明" align="center">
-        <template slot-scope="scope">
-          {{scope.row.desc}}
-        </template>
+        <template slot-scope="scope">{{scope.row.desc}}</template>
       </el-table-column>
       <el-table-column label="示例" align="center">
-        <template slot-scope="scope">
-          {{scope.row.example}}
-        </template>
+        <template slot-scope="scope">{{scope.row.example}}</template>
       </el-table-column>
       <el-table-column label="备注" align="center">
-        <template slot-scope="scope">
-          {{scope.row.remark}}
-        </template>
+        <template slot-scope="scope">{{scope.row.remark}}</template>
       </el-table-column>
     </el-table>
 
     <h4 class="title">返回示例</h4>
     <div class="response">
       <span class="resp-name">
-        <JsonViewer :value="response" :expand-depth="20" copyable font-size="20"/>
+        <JsonViewer :value="response" :expand-depth="20" copyable font-size="20" />
       </span>
     </div>
   </div>
@@ -81,19 +71,18 @@ export default {
 </script>
 
 <style scoped>
+.el-table {
+  width: 100%;
+}
+.response {
+  width: 100%;
+}
 
-  .el-table {
-    width: 70%;
-  }
-  .response {
-    width: 70%;
-  }
-
-  .title {
-    width: 100%;
-    background-color: #FAFAFA;
-    padding: 10px;
-    color: #999999;
-    /*border-left: 4px solid #1890ff;*/
-  }
+.title {
+  width: 100%;
+  background-color: #fafafa;
+  padding: 10px;
+  color: #999999;
+  /*border-left: 4px solid #1890ff;*/
+}
 </style>

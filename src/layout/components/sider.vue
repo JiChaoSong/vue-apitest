@@ -1,16 +1,11 @@
 <template>
-  <el-menu
-    :default-active="activemenu"
-    router
-    style="height: 100%"
-    background-color="rgb(0, 21, 41)"
-    text-color="#fffaff"
-    active-text-color="#1890ff"
-  >
+  <el-menu :default-active="activemenu" router>
     <div v-for="route in routers" :key="route.path" class="menutitle">
-      <el-menu-item v-if="!route.hidden"  :index="resolepath(route.path)" :route="resolepath(route.path)"  >
-        {{route.meta.title}}
-      </el-menu-item>
+      <el-menu-item
+        v-if="!route.hidden"
+        :index="resolepath(route.path)"
+        :route="resolepath(route.path)"
+      >{{route.meta.title}}</el-menu-item>
     </div>
   </el-menu>
 </template>
@@ -80,30 +75,30 @@ export default {
 </script>
 
 <style scoped>
-  .el-menu{
-    font-size: 20px;
-  }
-  .menutitle {
-    /*width: 100%;*/
-  }
-  .el-menu-item.is-active {
-    color: white !important;
-    /*border-right: 5px solid #1890ff !important;*/
-    background-color: #1890ff !important;
-
-  }
-  .el-menu-item:not(.is-disabled):hover {
-    background-color: #1890ff !important;
-  }
-  .el-menu-item:focus {
-    background-color: #1890ff !important;
-  }
-  .el-submenu:hover.el-submenu__title {
-    background-color: #1890ff !important;
-  }
-  .el-menu-item {
-    font-size: 16px !important;
-    /*width: 100px !important;*/
-    text-align: center !important;
-  }
+.el-menu {
+  font-size: 20px;
+  line-height: 80%;
+}
+.menutitle {
+  /*width: 100%;*/
+}
+/*.el-menu-item.is-active {*/
+/*  color: white !important;*/
+/*  !*border-right: 5px solid #1890ff !important;*!*/
+/*  background-color: #1890ff !important;*/
+/*}*/
+/*.el-menu-item:not(.is-disabled):hover {*/
+/*  background-color: #1890ff !important;*/
+/*}*/
+/*.el-menu-item:focus {*/
+/*  background-color: #1890ff !important;*/
+/*}*/
+/*.el-submenu:hover.el-submenu__title {*/
+/*  background-color: #1890ff !important;*/
+/*}*/
+.el-menu-item {
+  font-size: 16px !important;
+  /*width: 100px !important;*/
+  text-align: center !important;
+}
 </style>

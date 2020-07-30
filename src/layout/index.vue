@@ -1,15 +1,15 @@
 <template>
-  <el-container style="height: 100%;">
+  <el-container style="height: 100%;" class="header-container">
     <el-header>
-      <Navbar/>
+      <Navbar />
     </el-header>
-    <el-container>
+    <el-container class="main-container">
       <el-aside v-if="path !== indexpath" width="250px">
-        <SidebarItem/>
+        <SidebarItem />
       </el-aside>
       <el-container>
         <el-main>
-          <AppMain/>
+          <AppMain />
         </el-main>
       </el-container>
     </el-container>
@@ -56,35 +56,43 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .container {
-    height: 100%;
-  }
-  .el-header, .el-footer {
-    color: #333;
-    padding: 0!important;
-    text-align: center;
-    height: 56px !important;
-  }
+.container {
+  height: 100%;
+}
 
-  .el-aside {
-    color: #333;
-    text-align: left;
-    line-height: 200px;
-    overflow-y: hidden;
-  }
-  .el-container {
-    width: 100%;
-  }
-  .siders {
-    height: 100%;
-
-  }
-  .sidebar-logo-link {
-    width: 35px;
-    height: 35px;
-    vertical-align: middle;
-  }
-  .breadcrumb {
-    padding: 0 20px 20px 0;
-  }
+.el-header,
+.el-footer {
+  color: #333;
+  padding: 0 !important;
+  text-align: center;
+  height: 56px !important;
+  background-color: rgb(0, 21, 41);
+}
+.el-aside {
+  margin-top: 20px;
+}
+.main-container {
+  padding: 0 10% 0 10%;
+  background-color: #f2f6fc;
+}
+.el-aside {
+  color: #333;
+  text-align: left;
+  line-height: 200px;
+  overflow-y: hidden;
+}
+.el-container {
+  width: 100%;
+}
+.siders {
+  height: 100%;
+}
+.sidebar-logo-link {
+  width: 35px;
+  height: 35px;
+  vertical-align: middle;
+}
+.breadcrumb {
+  padding: 0 20px 20px 0;
+}
 </style>
