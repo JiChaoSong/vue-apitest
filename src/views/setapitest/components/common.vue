@@ -1,27 +1,47 @@
 <template>
-  <div class="">
+  <div class>
     <el-table :data="requestData" border>
-      <el-table-column type="index" label="#"/>
+      <el-table-column type="index" label="#" />
       <el-table-column label="参数名" align="center">
         <template slot-scope="scope">
-          <el-input v-model="scope.row.param" v-if="lables !== 'header'"/>
-          <el-select v-else v-model="scope.row.param" filterable allow-create @blur="searchBlur(scope.row, $event)">
-            <el-option v-for="item in headerSelect" :key="item.value" :value="item.value" :label="item.value"/>
+          <el-input v-model="scope.row.param" v-if="lables !== 'header'" />
+          <el-select
+            v-else
+            v-model="scope.row.param"
+            filterable
+            allow-create
+            @blur="searchBlur(scope.row, $event)"
+          >
+            <el-option
+              v-for="item in headerSelect"
+              :key="item.value"
+              :value="item.value"
+              :label="item.value"
+            />
           </el-select>
         </template>
       </el-table-column>
       <el-table-column v-if="lables === 'body'" label="类型" align="center" width="150">
         <template slot-scope="scope">
           <el-select v-model="scope.row.type" filterable allow-create>
-            <el-option v-for="item in datatype" :key="item.value" :value="item.value" :label="item.label"/>
+            <el-option
+              v-for="item in datatype"
+              :key="item.value"
+              :value="item.value"
+              :label="item.label"
+            />
           </el-select>
         </template>
       </el-table-column>
       <el-table-column label="参数值" align="center">
-        <template slot-scope="scope"><el-input v-model="scope.row.value"/></template>
+        <template slot-scope="scope">
+          <el-input v-model="scope.row.value" />
+        </template>
       </el-table-column>
       <el-table-column label="说明" align="center">
-        <template slot-scope="scope"><el-input v-model="scope.row.desc"/></template>
+        <template slot-scope="scope">
+          <el-input v-model="scope.row.desc" />
+        </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="150">
         <template slot-scope="scope">
@@ -29,17 +49,13 @@
             v-if="scope.$index === requestData.length -1"
             type="text"
             @click="addline(requestData)"
-          >
-            新增
-          </el-button>
+          >新增</el-button>
           <el-button
             v-if="requestData.length !== 1"
             type="text"
             style="color: #f95359"
             @click="deleteline(scope.$index, requestData)"
-          >
-            删除
-          </el-button>
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -65,7 +81,20 @@ export default {
     }
   },
   created () {
-    // console.log(this.labels)
+    console.log(this.requestData)
+  },
+  computed: {
+    listData () {
+      const list = this.requestData
+      if (list.length === 0) {
+        return list
+      } else {
+        for (var i = 0; i <= list.length; i++) {
+          list[i].value = null
+        }
+        return list
+      }
+    }
   },
   methods: {
     searchBlur (row, e) {
@@ -87,7 +116,7 @@ export default {
 </script>
 
 <style scoped>
-  .el-select {
-    width: 100%;
-  }
+.el-select {
+  width: 100%;
+}
 </style>

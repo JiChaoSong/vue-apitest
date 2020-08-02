@@ -112,6 +112,20 @@ export const constantRouterMap = [
             component: () => import(/* webpackChunkName: "about" */ '../views/testcase/simplecaserecord'),
             meta: { title: '单场景用例报告', activeMenu: '/testcase', index: '/testcase/index/case' },
             hidden: true
+          },
+          {
+            path: 'process',
+            name: 'Process',
+            component: () => import(/* webpackChunkName: "about" */ '../views/processcase/index'),
+            meta: { title: '流程接口用例', activeMenu: '/testcase' },
+            hidden: false
+          },
+          {
+            path: 'processcreate',
+            name: 'ProcessCreate',
+            component: () => import(/* webpackChunkName: "about" */ '../views/processcase/create'),
+            meta: { title: '新增流程接口测试用例', activeMenu: '/testcase', index: '/testcase/index/process' },
+            hidden: true
           }
         ]
 
@@ -145,6 +159,12 @@ export const constantRouterMap = [
             name: 'Project',
             component: () => import('../views/project/index'),
             meta: { title: '项目管理', activeMenu: '/system' }
+          },
+          {
+            path: 'setting',
+            name: 'Setting',
+            component: () => import('../views/project/setting'),
+            meta: { title: '全局配置', activeMenu: '/system' }
           },
           {
             path: 'status',

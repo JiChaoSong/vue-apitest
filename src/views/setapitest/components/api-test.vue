@@ -20,38 +20,62 @@
         </el-col>
       </el-row>
     </div>
-    <div>
-      <h4 class="title">Request</h4>
 
-      <el-tabs v-model="activeName" type="card">
-        <el-tab-pane label="Query参数" name="first">
-          <common :request-data="requestData.apiParams" />
-        </el-tab-pane>
-        <el-tab-pane label="请求头" name="second">
-          <common :request-data="requestData.apiHeaders" lables="header" />
-        </el-tab-pane>
-        <el-tab-pane label="请求体" name="third">
-          <common :request-data="requestData.apiBody" lables="body" />
-        </el-tab-pane>
-      </el-tabs>
-    </div>
-    <div>
-      <h4 class="title">Response</h4>
-      <el-tabs v-model="responseName" type="card">
-        <el-tab-pane label="响应头" name="first">
-          <JsonViewer :value="testResult.responseHeader" style="width: 70%" />
-        </el-tab-pane>
-        <el-tab-pane label="响应体" name="second">
-          <JsonViewer :value="testResult.responseBody" />
-        </el-tab-pane>
-        <el-tab-pane label="请求头" name="third">
-          <JsonViewer :value="testResult.requestHeader" />
-        </el-tab-pane>
-        <el-tab-pane label="请求体" name="four">
-          <JsonViewer :value="testResult.requestBody" />
-        </el-tab-pane>
-      </el-tabs>
-    </div>
+    <el-collapse v-model="activeNames">
+      <el-collapse-item title="Request" name="1">
+        <el-tabs v-model="activeName1" type="card">
+          <el-tab-pane label="Query参数" name="first">
+            <common :request-data="requestData.apiParams" />
+          </el-tab-pane>
+          <el-tab-pane label="请求头" name="second">
+            <common :request-data="requestData.apiHeaders" lables="header" />
+          </el-tab-pane>
+          <el-tab-pane label="请求体" name="third">
+            <common :request-data="requestData.apiBody" lables="body" />
+          </el-tab-pane>
+        </el-tabs>
+      </el-collapse-item>
+    </el-collapse>
+
+    <el-collapse v-model="activeNames">
+      <el-collapse-item title="Response" name="2">
+        <el-tabs v-model="responseName" type="card">
+          <el-tab-pane label="响应头" name="first">
+            <JsonViewer
+              :value="testResult.responseHeader"
+              style="width: 70%"
+              :expand-depth="20"
+              copyable
+              :font-size="20"
+            />
+          </el-tab-pane>
+          <el-tab-pane label="响应体" name="second">
+            <JsonViewer
+              :value="testResult.responseBody"
+              :expand-depth="20"
+              copyable
+              :font-size="20"
+            />
+          </el-tab-pane>
+          <el-tab-pane label="请求头" name="third">
+            <JsonViewer
+              :value="testResult.requestHeader"
+              :expand-depth="20"
+              copyable
+              :font-size="20"
+            />
+          </el-tab-pane>
+          <el-tab-pane label="请求体" name="four">
+            <JsonViewer
+              :value="testResult.requestBody"
+              :expand-depth="20"
+              copyable
+              :font-size="20"
+            />
+          </el-tab-pane>
+        </el-tabs>
+      </el-collapse-item>
+    </el-collapse>
 
     <el-dialog
       title="测试用例"
@@ -167,9 +191,9 @@ export default {
       httpcode: this.allEnums.httpCode,
       respcode: this.allEnums.responseCode,
       assertActive: 101,
-      activeName: 'first',
+      activeName1: 'third',
       caseActiveName: 'first',
-      responseName: 'first',
+      responseName: 'second',
       testResult: {},
       caseData: {
         id: undefined,
@@ -201,7 +225,8 @@ export default {
         ]
       },
 
-      dialogvisibleForm: false
+      dialogvisibleForm: false,
+      activeNames: ['1', '2']
 
     }
   },
