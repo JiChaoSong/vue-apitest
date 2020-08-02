@@ -2,16 +2,16 @@
   <div>
     <el-collapse v-model="activeNames" @change="handleChange">
       <el-collapse-item title="全局登录接口设置" name="1">
-        <el-form>
+        <el-form :rules="settingsRule" ref="settingForm">
           <el-table :data="list">
             <el-table-column type="expand" width="50" v-if="apiInfo !== null">
-              <template slot-scope="props">
-                <common :request-data="apiInfo.apiBody" lables="body" v-model="props.row.param" />
+              <template slot-scope="scope">
+                <common :request-data="apiInfo.apiBody" lables="body" v-model="scope.row.param" />
               </template>
             </el-table-column>
             <el-table-column label="请选择接口">
               <template slot-scope="scope">
-                <el-form-item>
+                <el-form-item prop="apiId">
                   <el-select v-model="scope.row.apiId" filterable @change="selectChange">
                     <el-option
                       v-for="item in apilist"
@@ -25,12 +25,12 @@
             </el-table-column>
             <el-table-column label="是否开启">
               <template slot-scope="scope">
-                <el-switch v-model="scope.row.status" />
+                <el-switch v-model="scope.row.isOpen" />
               </template>
             </el-table-column>
             <el-table-column width="100">
               <template slot-scope="scope">
-                <el-button type="primary">保存</el-button>
+                <el-button type="primary" @click="UpdateSetting(scope.row)">保存</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -59,6 +59,7 @@
 
 <script>
 import { apiinfoList, getapiinfo } from '../../api/apiinfo'
+import { getsettingInfo, settingUpdate } from '../../api/setting'
 import common from '../setapitest/components/common'
 const cityOptions = ['全局登录接口', '请求头']
 export default {
@@ -74,13 +75,7 @@ export default {
         page: 1,
         size: 2147483647
       },
-      list: [
-        {
-          apiId: null,
-          status: true,
-          param: null
-        }
-      ],
+      list: [],
       globleSetting: [],
 
       apilist: null,
@@ -88,7 +83,13 @@ export default {
       count: 1,
       apiInfo: null,
 
-      activeNames: ['1']
+      activeNames: ['1'],
+
+      settingsRule: {
+        apiId: [
+          { required: true, message: '登陆接口不能为空', trigger: 'blur' }
+        ]
+      }
     }
   },
   computed: {
@@ -102,11 +103,40 @@ export default {
   },
   created () {
     this.getapilist()
+    this.getSetting()
   },
   mounted () {
     this.getmoreshow()// 避免点击两次才生效
   },
   methods: {
+    // 获取全局配置信息
+    getSetting () {
+      getsettingInfo().then(res => {
+        console.log(res.data)
+        this.list.push(res.data)
+      })
+    },
+
+    // 保存设置
+    UpdateSetting (row) {
+      console.log(row)
+      this.$refs.settingForm.validate((valid) => {
+        if (valid) {
+          settingUpdate(row.id, row).then(res => {
+            if (res.code === 20000) {
+              location.reload()
+              this.$notify({
+                title: '成功',
+                message: '修改成功',
+                type: 'success',
+                duration: 2000
+              })
+            }
+          })
+        }
+      })
+    },
+
     getapilist () {
       apiinfoList(this.listQuery).then(res => {
         this.apilist = res.data.results

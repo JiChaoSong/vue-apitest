@@ -1,6 +1,6 @@
 <template>
   <div class>
-    <el-table :data="requestData" border>
+    <el-table :data="list" border>
       <el-table-column type="index" label="#" />
       <el-table-column label="参数名" align="center">
         <template slot-scope="scope">
@@ -45,16 +45,12 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="150">
         <template slot-scope="scope">
+          <el-button v-if="scope.$index === list.length -1" type="text" @click="addline(list)">新增</el-button>
           <el-button
-            v-if="scope.$index === requestData.length -1"
-            type="text"
-            @click="addline(requestData)"
-          >新增</el-button>
-          <el-button
-            v-if="requestData.length !== 1"
+            v-if="list.length !== 1"
             type="text"
             style="color: #f95359"
-            @click="deleteline(scope.$index, requestData)"
+            @click="deleteline(scope.$index, list)"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -67,6 +63,10 @@ import { allEnums } from '../../../utils/enum'
 
 export default {
   name: 'common',
+  model: {
+    prop: 'requestData',
+    event: 'change'
+  },
   props: {
     requestData: {
       type: Array,
@@ -77,23 +77,16 @@ export default {
   data () {
     return {
       datatype: allEnums.paramType,
-      headerSelect: this.allEnums.requestHeader
+      headerSelect: this.allEnums.requestHeader,
+      list: this.requestData
     }
   },
   created () {
     console.log(this.requestData)
   },
-  computed: {
-    listData () {
-      const list = this.requestData
-      if (list.length === 0) {
-        return list
-      } else {
-        for (var i = 0; i <= list.length; i++) {
-          list[i].value = null
-        }
-        return list
-      }
+  watch: {
+    list (value) {
+      this.$emit('change', value)
     }
   },
   methods: {
