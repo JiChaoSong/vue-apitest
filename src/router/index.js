@@ -58,14 +58,14 @@ export const constantRouterMap = [
             path: 'list',
             name: 'ApiList',
             component: () => import(/* webpackChunkName: "about" */ '../views/apitest/list'),
-            meta: { title: '接口列表', activeMenu: '/apitest' },
+            meta: { title: '集合测试', activeMenu: '/apitest' },
             hidden: true
           },
           {
             path: 'setapi',
             name: 'SetApi',
             component: () => import(/* webpackChunkName: "about" */ '../views/setapitest/index'),
-            meta: { title: '集合测试', activeMenu: '/apitest' }
+            meta: { title: '接口测试', activeMenu: '/apitest' }
           },
           {
             path: 'create',

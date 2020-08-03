@@ -84,9 +84,6 @@
       class="create-case-dialog"
     >
       <el-form ref="caseDataForm" :model="caseData" :rules="caseDataRule" label-position="top">
-        <el-form-item label="用例编号" prop="caseNum">
-          <el-input v-model="caseData.caseNum" />
-        </el-form-item>
         <el-form-item label="用例名称" prop="caseName">
           <el-input v-model="caseData.caseName" />
         </el-form-item>
@@ -217,9 +214,6 @@ export default {
       },
 
       caseDataRule: {
-        caseNum: [
-          { required: true, message: '请输入用例编号', trigger: 'blur' }
-        ],
         caseName: [
           { required: true, message: '请输入用例名称', trigger: 'blur' }
         ]

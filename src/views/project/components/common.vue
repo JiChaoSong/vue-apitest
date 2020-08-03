@@ -1,6 +1,6 @@
 <template>
   <div class>
-    <el-table :data="requestData" border>
+    <el-table :data="list" border>
       <el-table-column type="index" label="#" />
       <el-table-column label="参数名" align="center">
         <template slot-scope="scope">
@@ -45,16 +45,12 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="150">
         <template slot-scope="scope">
+          <el-button v-if="scope.$index === list.length -1" type="text" @click="addline(list)">新增</el-button>
           <el-button
-            v-if="scope.$index === requestData.length -1"
-            type="text"
-            @click="addline(requestData)"
-          >新增</el-button>
-          <el-button
-            v-if="requestData.length !== 1"
+            v-if="list.length !== 1"
             type="text"
             style="color: #f95359"
-            @click="deleteline(scope.$index, requestData)"
+            @click="deleteline(scope.$index, list)"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -67,12 +63,17 @@ import { allEnums } from '../../../utils/enum'
 
 export default {
   name: 'common',
+  model: {
+    prop: 'param',
+    event: 'change'
+  },
   props: {
     requestData: {
       type: Array,
       require: true
     },
-    lables: String
+    lables: String,
+    param: Array
   },
   data () {
     return {
@@ -83,6 +84,14 @@ export default {
   },
   created () {
     console.log(this.requestData)
+  },
+  watch: {
+    list: {
+      handler (value, oldvalue) {
+        this.$emit('change', value)
+      },
+      deep: true
+    }
   },
   methods: {
     searchBlur (row, e) {

@@ -5,10 +5,6 @@
     </div>
     <el-table :data="list">
       <el-table-column type="index" :index="indexMethod" label="#" />
-
-      <el-table-column label="用例编号" align="center">
-        <template slot-scope="scope">{{scope.row.caseNum}}</template>
-      </el-table-column>
       <el-table-column label="用例名称" align="center">
         <template slot-scope="scope">{{scope.row.caseName}}</template>
       </el-table-column>

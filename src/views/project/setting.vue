@@ -2,11 +2,23 @@
   <div>
     <el-collapse v-model="activeNames" @change="handleChange">
       <el-collapse-item title="全局登录接口设置" name="1">
-        <el-form :rules="settingsRule" ref="settingForm">
+        <el-form
+          :rules="settingsRule"
+          ref="settingForm"
+          label-position="top"
+          :inline="true"
+          class="form-line"
+        >
           <el-table :data="list">
-            <el-table-column type="expand" width="50" v-if="apiInfo !== null">
+            <el-table-column type="expand" width="50">
               <template slot-scope="scope">
-                <common :request-data="apiInfo.apiBody" lables="body" v-model="scope.row.param" />
+                <common
+                  :request-data="apiInfo.apiBody"
+                  lables="body"
+                  :param="scope.row.param"
+                  @change="getparam($event,scope.row)"
+                  v-if="scope.row.apiId !== null"
+                />
               </template>
             </el-table-column>
             <el-table-column label="请选择接口">
@@ -60,7 +72,7 @@
 <script>
 import { apiinfoList, getapiinfo } from '../../api/apiinfo'
 import { getsettingInfo, settingUpdate } from '../../api/setting'
-import common from '../setapitest/components/common'
+import common from './components/common'
 const cityOptions = ['全局登录接口', '请求头']
 export default {
   name: 'setting',
@@ -119,22 +131,28 @@ export default {
 
     // 保存设置
     UpdateSetting (row) {
-      console.log(row)
-      this.$refs.settingForm.validate((valid) => {
-        if (valid) {
-          settingUpdate(row.id, row).then(res => {
-            if (res.code === 20000) {
-              location.reload()
-              this.$notify({
-                title: '成功',
-                message: '修改成功',
-                type: 'success',
-                duration: 2000
-              })
-            }
+      // this.$refs.settingForm.validate((valid) => {
+      //   if (valid) {
+      settingUpdate(row.id, row).then(res => {
+        if (res.code === 20000) {
+          location.reload()
+          this.$notify({
+            title: '成功',
+            message: '修改成功',
+            type: 'success',
+            duration: 2000
           })
         }
       })
+      // }
+      // })
+    },
+
+    getparam (value, row) {
+      console.log('测试')
+      const val = value
+      row.param = val
+      console.log(row)
     },
 
     getapilist () {
@@ -195,7 +213,10 @@ export default {
   padding-left: 10px;
   color: #999999;
 }
-.el-select > .el-input {
-  margin-top: 20px;
+.el-form-item {
+  margin: 0 20px 0 20px;
+}
+.opration-button {
+  margin-top: 50px;
 }
 </style>
