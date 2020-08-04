@@ -1,4 +1,4 @@
-FROM node:laster
+FROM node:14.7.0
 
 USER root
 
