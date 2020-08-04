@@ -75,12 +75,11 @@ export const allEnums = {
     { value: 'Warning', label: 'Warning', desc: '关于消息实体的警告信息' }
   ],
   assertType: [
-    { value: 101, label: 'HTTP状态码' },
-    { value: 102, label: '响应状态码' },
-    { value: 103, label: '全文匹配' },
-    { value: 104, label: '响应时间' }
-    // { value: 104, label: '状态码断言' },
-    // { value: 105, label: '状态码断言' }
+    { value: 101, label: '无' },
+    { value: 102, label: 'HTTP状态码' },
+    { value: 103, label: '响应状态码' },
+    { value: 104, label: '全文匹配', disabled: true },
+    { value: 105, label: '响应时间', disabled: true }
   ],
   httpCode: [
     { value: 101, label: 200 },
@@ -93,5 +92,12 @@ export const allEnums = {
     { value: 102, label: 30001 },
     { value: 103, label: 40000 },
     { value: 104, label: 50000 }
+  ],
+  // 参数提取
+  patamExtraction: [
+    { value: 101, label: 'JsonPath', isEnble: true },
+    { value: 102, label: '正则表达式', isEnble: true },
+    { value: 103, label: 'xpath', isEnble: false },
+    { value: 104, label: 'bs4', isEnble: false }
   ]
 }
