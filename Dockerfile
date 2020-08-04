@@ -8,6 +8,6 @@ WORKDIR /code
 
 RUN npm config set registry https://registry.npm.taobao.org
 
-RUN npm -i
+RUN npm install
 
 ADD . /code/
