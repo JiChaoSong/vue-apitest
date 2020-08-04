@@ -4,7 +4,8 @@ services:
   web-apitest:
     restart: always
     build: .
-    command: "npm run serve"
+    environment:
+      TZ: Asia/Shanghai
     volumes:
     - .:/code
     ports:
