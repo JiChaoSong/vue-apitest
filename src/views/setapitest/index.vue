@@ -1,5 +1,29 @@
 <template>
   <div class="project-container">
+    <div class="filter-container">
+      <el-form :inline="true" :model="listQuery" size="small">
+        <el-form-item label="接口名称" prop="apiName">
+          <el-input v-model="listQuery.apiNames" size="small" class="filter-input" />
+        </el-form-item>
+        <el-form-item label="接口地址" prop="apiPath">
+          <el-input v-model="listQuery.apiPaths" size="small" class="filter-input" />
+        </el-form-item>
+        <el-form-item label="请求方法" prop="apiMethod">
+          <el-select v-model="listQuery.apiMethods" size="small" class="filter-input">
+            <el-option
+              v-for="item in Methods"
+              :key="item.value"
+              :value="item.value"
+              :label="item.label"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="fetchData" size="small">查询</el-button>
+          <el-button @click="resetListQuery" size="small">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
     <div class="operation-container">
       <router-link :to="{name: 'Create'}" style="padding-right:20px;">
         <el-button type="primary" icon="el-icon-plus" size="small">新增</el-button>
@@ -82,8 +106,12 @@ export default {
       total: 0,
       listQuery: {
         page: 1,
-        size: 10
+        size: 10,
+        apiNames: null,
+        apiPath: null,
+        apiMethod: null
       },
+      Methods: this.allEnums.requestMethod,
       dialogvisibleImport: false,
       apiImport: {
         url: '',
@@ -157,6 +185,17 @@ export default {
     hanlecancel () {
       this.resetapiImport()
       this.dialogvisibleImport = false
+    },
+
+    resetListQuery () {
+      this.listQuery = {
+        page: 1,
+        size: 10,
+        apiNames: null,
+        apiPaths: null,
+        apiMethods: null
+      }
+      this.fetchData()
     }
   }
 }
@@ -176,5 +215,8 @@ export default {
 .el-table .cell {
   text-align: center;
   white-space: pre-line; /*保留换行符*/
+}
+.filter-input {
+  width: 280px;
 }
 </style>

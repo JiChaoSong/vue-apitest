@@ -3,20 +3,25 @@
     <div class="operation-container">
       <el-button type="primary" icon="el-icon-plus" size="small" @click="handleCreateCase">新增</el-button>
     </div>
-    <el-table :data="list">
+    <el-table :data="list" size="small">
       <el-table-column type="index" :index="indexMethod" label="#" />
       <el-table-column label="用例名称" align="center">
         <template slot-scope="scope">{{scope.row.caseName}}</template>
       </el-table-column>
+      <el-table-column label="用例转台" align="center">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.caseStatus | formatStatus">{{scope.row.caseStatus | showStatus}}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="测试时间" align="center">
-        <template slot-scope="scope">{{scope.row.startTime}}</template>
+        <template slot-scope="scope">{{scope.row.startTime | formatDate}}</template>
       </el-table-column>
       <el-table-column label="创建者" align="center">
         <template slot-scope="scope">{{scope.row.created_User}}</template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="150">
         <template slot-scope="scope">
-          <el-button type="text" @click="handleCopyCase(scope.row)">测试</el-button>
+          <el-button type="text" @click="handleCaseTest(scope.row)">测试</el-button>
           <el-button type="text" @click="handleCopyCase(scope.row)">复制</el-button>
         </template>
       </el-table-column>
@@ -131,9 +136,6 @@
       class="create-case-dialog"
     >
       <el-form :model="caseCopyData" ref="caseCopyData" :rules="caseDataRule">
-        <el-form-item label="用例编号" prop="caseNum">
-          <el-input v-model="caseCopyData.caseNum" />
-        </el-form-item>
         <el-form-item label="用例名称" prop="caseName">
           <el-input v-model="caseCopyData.caseName" />
         </el-form-item>
@@ -148,7 +150,7 @@
 
 <script>
 import { getUserId } from '../../../utils/user'
-import { caseAdd, caseCopy } from '../../../api/case'
+import { caseAdd, caseCopy, simplecaseRun } from '../../../api/case'
 
 export default {
   name: 'ApiCase',
@@ -160,6 +162,28 @@ export default {
     testapiinfo: {
       type: Object,
       required: true
+    }
+  },
+  filters: {
+    formatStatus (val) {
+      const tagColor = {
+        101: null,
+        102: 'success',
+        103: 'danger',
+        104: 'warning',
+        105: 'info'
+      }
+      return tagColor[val]
+    },
+    showStatus (val) {
+      const tagValue = {
+        101: 'unexecuted',
+        102: 'pass',
+        103: 'fail',
+        104: 'block',
+        105: 'closed'
+      }
+      return tagValue[val]
     }
   },
   data () {
@@ -195,9 +219,6 @@ export default {
       },
 
       caseDataRule: {
-        caseNum: [
-          { required: true, message: '请输入用例编号', trigger: 'blur' }
-        ],
         caseName: [
           { required: true, message: '请输入用例名称', trigger: 'blur' }
         ]
@@ -356,6 +377,18 @@ export default {
     handlecancelData () {
       this.resetCaeData()
       this.dialogvisibleForm = false
+    },
+    handleCaseTest (row) {
+      console.log(row)
+
+      simplecaseRun({ caseId: row.id }).then(res => {
+        if (res.code === 20000) {
+          this.$message({
+            message: res.message,
+            type: 'success'
+          })
+        }
+      })
     }
 
   }

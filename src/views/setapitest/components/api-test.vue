@@ -48,6 +48,9 @@
           <el-tab-pane label="参数提取" name="four">
             <extraction :list="requestData.paramExtrat" />
           </el-tab-pane>
+          <el-tab-pane label="断言" name="six">
+            <assertions :api-assert="requestData.apiAssert"/>
+          </el-tab-pane>
         </el-tabs>
       </el-collapse-item>
     </el-collapse>
@@ -95,6 +98,10 @@
               :font-size="20"
               copyable
             />
+          </el-tab-pane>
+          <el-tab-pane label="断言结果" name="six">
+            <p style="color:#999999;">* 0:成功, 1:失败, 2: 错误*</p>
+            <span>{{testResult.assertRestlt}}</span>
           </el-tab-pane>
         </el-tabs>
       </el-collapse-item>
@@ -185,6 +192,7 @@
             </div>
           </div>
         </el-form-item>
+
         <el-form-item style="text-align:  right">
           <el-button type="primary" @click="createCase">保存</el-button>
         </el-form-item>
@@ -196,6 +204,7 @@
 <script>
 import common from './common'
 import extraction from './extraction'
+import assertions from './assertions'
 import JsonViewer from 'vue-json-viewer'
 import { apiinfoTest, apiinfoUpdate } from '../../../api/apiinfo'
 import { getUserId } from '../../../utils/user'
@@ -208,7 +217,7 @@ export default {
       required: true
     }
   },
-  components: { common, JsonViewer, extraction },
+  components: { common, JsonViewer, extraction, assertions },
   data () {
     return {
       methons: this.allEnums.requestMethod,
@@ -289,6 +298,15 @@ export default {
             expression: null
           }
         ]
+      } if (info.apiAssert === null) {
+        info.apiAssert = {
+          type: 101,
+          httpcode: null,
+          responsecode: null,
+          responseTime: null,
+          // 全文匹配
+          fullMatch: null
+        }
       }
       return info
     },

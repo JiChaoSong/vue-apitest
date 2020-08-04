@@ -17,7 +17,9 @@ Vue.use(ElementUI)
 Vue.component('v-chart', ECharts)
 
 Vue.filter('formatDate', function (value) {
-  return Mount(value).format('YYYY-MM-DD HH:mm:ss')
+  if (value !== null) {
+    return Mount(value).format('YYYY-MM-DD HH:mm:ss')
+  }
 })
 
 Vue.prototype.allEnums = allEnums

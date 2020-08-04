@@ -12,22 +12,19 @@
       :cell-style="{padding:'5px'}"
     >
       <el-table-column align="center" label="#" width="65px  " :index="indexMethod" type="index" />
-      <el-table-column label="用例编号" align="center">
-        <template slot-scope="scope">{{scope.row.caseNum}}</template>
-      </el-table-column>
       <el-table-column label="用例名称" align="center">
         <template slot-scope="scope">{{scope.row.caseName}}</template>
       </el-table-column>
       <el-table-column label="用例状态" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.caseStatus | formatStatus">{{scope.row.caseStatus}}</el-tag>
+          <el-tag :type="scope.row.caseStatus | formatStatus">{{scope.row.caseStatus | showStatus}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="关联接口" align="center">
         <template slot-scope="scope">
-          <el-button type="text" @click="getApiInfodetail(scope.row)">
+<!--          <el-button type="text" @click="getApiInfodetail(scope.row)">-->
             {{scope.row.apiInfo.apiName}}
-          </el-button>
+<!--          </el-button>-->
         </template>
       </el-table-column>
       <el-table-column label="创建人" align="center">
@@ -162,13 +159,23 @@ export default {
   filters: {
     formatStatus (val) {
       const tagColor = {
-        unexecuted: null,
-        pass: 'success',
-        fail: 'danger',
-        block: 'warning',
-        closed: 'info'
+        101: null,
+        102: 'success',
+        103: 'danger',
+        104: 'warning',
+        105: 'info'
       }
       return tagColor[val]
+    },
+    showStatus (val) {
+      const tagValue = {
+        101: 'unexecuted',
+        102: 'pass',
+        103: 'fail',
+        104: 'block',
+        105: 'closed'
+      }
+      return tagValue[val]
     }
   },
   data () {
