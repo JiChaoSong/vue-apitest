@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  web-apitest:
+    restart: always
+    build: .
+    command: "npm run serve"
+    volumes:
+    - .:/code
+    ports:
+    - "9538:9528"
