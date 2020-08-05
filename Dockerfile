@@ -7,8 +7,6 @@ WORKDIR /app
 
 COPY . /app
 
-RUN ll
-
 COPY ./nginx/nginx.conf /usr/share/nginx/conf
 # 拷贝前端vue项目打包后生成的文件到nginx下运行
 COPY ./dist /usr/share/nginx/html
