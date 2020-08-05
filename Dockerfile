@@ -1,26 +1,3 @@
-# node镜像
-FROM node:latest
-# 维护者信息
-MAINTAINER songjichao "jichaosong@outlook.com"
-
-RUN echo "-------------------- web环境配置 --------------------"
-
-WORKDIR /app
-
-COPY . /app
-
-# 设置淘宝npm镜像
-RUN npm install -g cnpm --registry=https://registry.npm.taobao.org
-# 安装依赖
-RUN cnpm install
-
-# 打包 - 目的：丢到nginx下跑
-RUN cnpm run build
-
-
-
-
-# ======================== 上：npm打包  下：nginx运行 ========================
 # nginx镜像
 FROM nginx:1.15.3-alpine
 # 维护者信息
@@ -30,6 +7,11 @@ MAINTAINER songjichao "jichaosong@outlook.com"
 RUN rm /etc/nginx/conf.d/nginx.conf
 RUN rm /etc/nginx/nginx.conf
 # 把主机的nginx.conf文件复制到nginx容器的/etc/nginx文件夹下
+
+WORKDIR /app
+
+COPY . /app
+
 COPY ./nginx/nginx.conf /etc/nginx/
 # 拷贝前端vue项目打包后生成的文件到nginx下运行
 COPY --from=build /app/dist /usr/share/nginx/html
