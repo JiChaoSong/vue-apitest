@@ -1,5 +1,5 @@
 # node镜像
-FROM node:latest as build
+FROM node:latest
 # 维护者信息
 MAINTAINER songjichao "jichaosong@outlook.com"
 
@@ -24,7 +24,7 @@ RUN cnpm run build
 
 # ======================== 上：npm打包  下：nginx运行 ========================
 # nginx镜像
-FROM nginx:1.15.3-alpine as production
+FROM nginx:1.15.3-alpine
 # 维护者信息
 MAINTAINER songjichao "jichaosong@outlook.com"
 
