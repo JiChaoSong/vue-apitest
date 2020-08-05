@@ -3,16 +3,11 @@ FROM nginx:1.15.3-alpine
 # 维护者信息
 MAINTAINER songjichao "jichaosong@outlook.com"
 
-# 移除nginx容器的default.conf文件、nginx配置文件
-RUN rm /etc/nginx/conf.d/nginx.conf
-RUN rm /etc/nginx/nginx.conf
-# 把主机的nginx.conf文件复制到nginx容器的/etc/nginx文件夹下
-
 WORKDIR /app
 
 COPY . /app
 
-COPY ./nginx/nginx.conf /etc/nginx/
+COPY ./nginx/nginx.conf /usr/share/nginx/conf
 # 拷贝前端vue项目打包后生成的文件到nginx下运行
 COPY --from=build /app/dist /usr/share/nginx/html
 
