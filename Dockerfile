@@ -5,10 +5,9 @@ MAINTAINER songjichao "jichaosong@outlook.com"
 
 RUN echo "-------------------- web环境配置 --------------------"
 
-# 指定接下来的工作路径为/app  - 类似于cd命令
-WORKDIR /code
-# 拷贝前端项目到app目录下
-COPY ./code
+WORKDIR /app
+
+COPY ./app
 
 # 设置淘宝npm镜像
 RUN npm install -g cnpm --registry=https://registry.npm.taobao.org
@@ -18,8 +17,7 @@ RUN cnpm install
 # 打包 - 目的：丢到nginx下跑
 RUN cnpm run build
 
-# 前端项目运行命令
-#CMD ["npm","run","start"]
+
 
 
 # ======================== 上：npm打包  下：nginx运行 ========================
@@ -34,7 +32,7 @@ RUN rm /etc/nginx/nginx.conf
 # 把主机的nginx.conf文件复制到nginx容器的/etc/nginx文件夹下
 COPY ./nginx/nginx.conf /etc/nginx/
 # 拷贝前端vue项目打包后生成的文件到nginx下运行
-COPY --from=build /code/dist /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 
 # 暴露8101端口
 EXPOSE 9528
