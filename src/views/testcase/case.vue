@@ -43,6 +43,7 @@
             <el-button type="text">查看</el-button>
           </router-link>
           <el-button type="text" @click="handleCaseTest(row)">执行</el-button>
+          <el-button type="text" @click="handleCopyCase(row)">复制</el-button>
           <el-button type="text" @click="handleUpdate(row)">编辑</el-button>
           <el-button type="text" style="color: #f95359" @click="deleteProject(row)">删除</el-button>
         </template>
@@ -188,6 +189,23 @@
     <el-dialog :title="dialogtitle" :visible.sync="dialogvisibleApiInfo" width="1000px">
       <ApiAdd :apirequest="apirequest" :dialogtitle="dialogtitle" />
     </el-dialog>
+
+    <el-dialog
+      title="复制测试用例"
+      :visible.sync="dialogvisibleCopy"
+      width="800px"
+      class="create-case-dialog"
+    >
+      <el-form :model="caseCopyData" ref="caseCopyData" :rules="caseDataRule">
+        <el-form-item label="用例名称" prop="caseName">
+          <el-input v-model="caseCopyData.caseName" />
+        </el-form-item>
+        <el-form-item style="text-align:  right">
+          <el-button type="primary" @click="copyCase">保存</el-button>
+          <el-button @click="handlecancelCopy">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -201,6 +219,7 @@ import {
   caseInfo,
   simplecaserecordRun,
   caserecordAdd,
+  caseCopy,
   caserecordInfo, simplecaserecordLast, simplecaseRun
 } from '../../api/case'
 import { apiinfoList } from '../../api/apiinfo'
@@ -333,7 +352,20 @@ export default {
       },
       caserecordId: null,
       // 报告详情
-      caserecorddetail: null
+      caserecorddetail: null,
+
+      caseCopyData: {
+        id: undefined,
+        caseNum: '',
+        caseName: ''
+      },
+      dialogvisibleCopy: false,
+
+      caseDataRule: {
+        caseName: [
+          { required: true, message: '请输入用例名称', trigger: 'blur' }
+        ]
+      }
     }
   },
   created () {
@@ -593,18 +625,55 @@ export default {
           this.fetchData()
         }
       })
+    },
+
+    resetCaseCopy () {
+      this.caseCopyData = {
+        id: undefined,
+        caseNum: '',
+        caseName: ''
+      }
+    },
+
+    handleCopyCase (row) {
+      this.resetCaseCopy()
+      this.caseCopyData = Object.assign({}, row)
+      this.caseCopyData.caseName = '副本-' + row.caseName
+      this.dialogvisibleCopy = true
+      this.$nextTick(() => {
+        this.$refs.caseCopyData.clearValidate()
+      })
+    },
+    copyCase () {
+      this.$refs.caseCopyData.validate((valid) => {
+        if (valid) {
+          const tempData = Object.assign({}, this.caseCopyData)
+          caseCopy(tempData).then(res => {
+            if (res.code === 20000) {
+              this.dialogvisibleCopy = false
+              this.fetchData()
+              this.$notify({
+                title: '成功',
+                message: '复制成功',
+                type: 'success',
+                duration: 2000
+              })
+            }
+          })
+        }
+      })
+    },
+
+    // 取消
+    handlecancelCopy () {
+      this.resetCaseCopy()
+      this.dialogvisibleCopy = false
     }
   }
 }
 </script>
 
 <style scoped>
-.el-input {
-  /*width: 400px;*/
-}
-.el-select {
-  /*width: 400px;*/
-}
 .tag-span {
   margin: 0 20px 0 20px;
   font-weight: bold;

@@ -49,7 +49,7 @@
             <extraction :list="requestData.paramExtrat" />
           </el-tab-pane>
           <el-tab-pane label="断言" name="six">
-            <assertions :api-assert="requestData.apiAssert"/>
+            <assertions :api-assert="requestData.apiAssert" />
           </el-tab-pane>
         </el-tabs>
       </el-collapse-item>
@@ -150,7 +150,7 @@
         <el-form-item label="断言">
           <div class="assert-style">
             <div class="radio-style">
-              <el-radio-group v-model="assertActive">
+              <el-radio-group v-model="assertActive" @click="handleRadio">
                 <el-radio
                   v-for="item in assertype"
                   :label="item.value"
@@ -417,6 +417,9 @@ export default {
       if (command === 'save') {
         this.testAndUpdate()
       }
+    },
+    handleRadio (val) {
+      this.assertActive = val
     }
 
   }

@@ -97,7 +97,8 @@ export const allEnums = {
   patamExtraction: [
     { value: 101, label: 'JsonPath', isEnble: true },
     { value: 102, label: '正则表达式', isEnble: true },
-    { value: 103, label: 'xpath', isEnble: false },
-    { value: 104, label: 'bs4', isEnble: false }
+    { value: 103, label: 'Json', isEnble: true },
+    { value: 104, label: 'xpath', isEnble: false },
+    { value: 105, label: 'bs4', isEnble: false }
   ]
 }

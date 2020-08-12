@@ -1,7 +1,7 @@
 <template>
   <el-table :data="list" border>
     <el-table-column type="index" label="#" width="50" />
-    <el-table-column label="类型" align="center" width="200">
+    <el-table-column label="类型" align="center" width="180">
       <template slot-scope="scope">
         <el-select v-model="scope.row.type">
           <el-option
@@ -14,7 +14,7 @@
         </el-select>
       </template>
     </el-table-column>
-    <el-table-column label="变量名" align="center" width="300">
+    <el-table-column label="变量名" align="center" width="220">
       <template slot-scope="scope">
         <el-input v-model="scope.row.label" />
       </template>
@@ -24,9 +24,10 @@
         <el-input v-model="scope.row.expression" />
       </template>
     </el-table-column>
-    <el-table-column label="是否为全局变量" align="center">
+    <!-- <el-table-column label="" -->
+    <el-table-column label="是否为全局变量" align="center" width="150">
       <template slot-scope="scope">
-        <el-switch v-model="scope.row.isGloble"/>
+        <el-switch v-model="scope.row.isGloble" />
       </template>
     </el-table-column>
     <el-table-column label="操作" align="center" width="150">

@@ -383,6 +383,7 @@ export default {
 
       simplecaseRun({ caseId: row.id }).then(res => {
         if (res.code === 20000) {
+          this.fetchData()
           this.$message({
             message: res.message,
             type: 'success'

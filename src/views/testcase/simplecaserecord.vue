@@ -3,9 +3,7 @@
     <el-table v-loading="listLoading" :data="list" stripe size="small">
       <el-table-column align="center" label="#" width="65px  " :index="indexMethod" type="index" />
       <el-table-column label="用例名称" align="center">
-        <template slot-scope="scope">
-          {{scope.row.case.caseName}}
-        </template>
+        <template slot-scope="scope">{{scope.row.case.caseName}}</template>
       </el-table-column>
       <el-table-column label="接口名称" align="center">
         <template slot-scope="scope">{{scope.row.case.apiInfo.apiName}}</template>
@@ -35,7 +33,12 @@
       @current-change="handleCurrentChange"
     />
 
-    <el-dialog title="测试报告" :visible.sync="dialogvisibleReport" width="1000px" class="create-case-dialog">
+    <el-dialog
+      title="测试报告"
+      :visible.sync="dialogvisibleReport"
+      width="1000px"
+      class="create-case-dialog"
+    >
       <SimpleCase :apicase="recordCase" />
     </el-dialog>
   </div>
@@ -109,6 +112,7 @@ export default {
     },
 
     handleView (row) {
+      this.recordCase = null
       this.recordCase = Object.assign({}, row)
       this.dialogvisibleReport = true
       console.log(this.recordCase)
@@ -123,5 +127,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
