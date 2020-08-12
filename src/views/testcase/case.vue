@@ -40,7 +40,7 @@
       <el-table-column label="操作" align="center" width="250px">
         <template slot-scope="{row}">
           <router-link :to="{name: 'CaseRecord', query: {id: row.id}}" style="padding: 10px">
-            <el-button type="text" @click="getLastCaseRecotd(row)">查看</el-button>
+            <el-button type="text">查看</el-button>
           </router-link>
           <el-button type="text" @click="handleCaseTest(row)">执行</el-button>
           <el-button type="text" @click="handleUpdate(row)">编辑</el-button>
