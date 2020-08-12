@@ -22,10 +22,13 @@
       </el-table-column>
       <el-table-column label="关联接口" align="center">
         <template slot-scope="scope">
-<!--          <el-button type="text" @click="getApiInfodetail(scope.row)">-->
-            {{scope.row.apiInfo.apiName}}
-<!--          </el-button>-->
+          <!--          <el-button type="text" @click="getApiInfodetail(scope.row)">-->
+          {{scope.row.apiInfo.apiName}}
+          <!--          </el-button>-->
         </template>
+      </el-table-column>
+      <el-table-column label="运行次数" align="center">
+        <template slot-scope="scope">{{scope.row.runcount}}</template>
       </el-table-column>
       <el-table-column label="创建人" align="center">
         <template slot-scope="scope">{{scope.row.created_User}}</template>
@@ -36,21 +39,12 @@
 
       <el-table-column label="操作" align="center" width="250px">
         <template slot-scope="{row}">
-          <el-row>
-
-<!--            <el-button type="text" @click="handleRelationApi(row)">关联接口</el-button>-->
-          </el-row>
-          <el-row>
-            <el-button
-              type="text"
-              @click="runSimpleCase(row)"
-              v-loading.fullscreen.lock="fullscreenLoading"
-              element-loading-text="用例执行中"
-            >执行</el-button>
+          <router-link :to="{name: 'CaseRecord', query: {id: row.id}}" style="padding: 10px">
             <el-button type="text" @click="getLastCaseRecotd(row)">查看</el-button>
-            <el-button type="text" @click="handleUpdate(row)">编辑</el-button>
-            <el-button type="text" style="color: #f95359" @click="deleteProject(row)">删除</el-button>
-          </el-row>
+          </router-link>
+          <el-button type="text" @click="handleCaseTest(row)">执行</el-button>
+          <el-button type="text" @click="handleUpdate(row)">编辑</el-button>
+          <el-button type="text" style="color: #f95359" @click="deleteProject(row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -65,17 +59,14 @@
     <el-dialog
       :title="titleMap[dialogvisibleTitle]"
       :visible.sync="dialogvisibleForm"
-      width="800px"
+      width="1200px"
     >
-      <el-form ref="ruleform" :model="projectForm" :rules="projectrule" label-width="100px">
-        <el-form-item label="用例编号:" prop="projectName">
-          <el-input v-model="projectForm.caseNum" placeholder="请输入用例编号" />
+      <el-form ref="ruleform" :model="caseData" :rules="projectrule" label-position="top">
+        <el-form-item label="用例名称:" prop="caseName">
+          <el-input v-model="caseData.caseName" placeholder="请输入用例名称" />
         </el-form-item>
-        <el-form-item label="用例名称:" prop="projectUrl">
-          <el-input v-model="projectForm.caseName" placeholder="请输入用例名称" />
-        </el-form-item>
-        <el-form-item label="关联接口:" prop="interface">
-          <el-select v-model="projectForm.interface" filterable placeholder="请选择">
+        <el-form-item label="关联接口:" prop="interface" v-if="dialogvisibleTitle==='created'">
+          <el-select v-model="caseData.interface" filterable placeholder="请选择">
             <el-option
               v-for="item in apiinfolist"
               :key="item.id"
@@ -84,16 +75,85 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="用例描述:" prop="projectDesc">
-          <el-input
-            v-model="projectForm.caseDesc"
-            type="textarea"
-            placeholder="请输入用例描述"
-            autosize
-            style="width: 400px"
-          />
+        <el-form-item label="接口路径">
+          <el-input v-model="caseData.apiInfo.apiPath" :disabled="true">
+            <el-select
+              v-model="caseData.apiInfo.apiMethod"
+              slot="prepend"
+              class="select-method"
+              :disabled="true"
+            >
+              <el-option
+                v-for="item in methons"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-input>
         </el-form-item>
-        <el-form-item style="text-align: left">
+        <el-form-item label="请求参数">
+          <el-tabs v-model="caseActiveName" type="card">
+            <el-tab-pane label="Query参数" name="first">
+              <common :request-data="caseData.apiParams" />
+            </el-tab-pane>
+            <el-tab-pane label="请求头" name="second">
+              <common :request-data="caseData.apiHeaders" lables="header" />
+            </el-tab-pane>
+            <el-tab-pane label="请求体" name="third">
+              <common :request-data="caseData.apiBody" lables="body" />
+            </el-tab-pane>
+            <el-tab-pane label="参数提取" name="four">
+              <extraction :list="caseData.paramExtrat" />
+            </el-tab-pane>
+          </el-tabs>
+        </el-form-item>
+        <el-form-item label="断言">
+          <div class="assert-style">
+            <div class="radio-style">
+              <el-radio-group v-model="caseData.apiAssert.type" @change="handleRadio">
+                <el-radio
+                  v-for="item in assertype"
+                  :label="item.value"
+                  :key="item.value"
+                  :disabled="item.disabled"
+                >{{item.label}}</el-radio>
+              </el-radio-group>
+            </div>
+            <div class="select-assert">
+              <el-form-item label="http状态码" v-show="assertActive === 102">
+                <el-select v-model="caseData.apiAssert.httpcode">
+                  <el-option
+                    v-for="item in httpcode"
+                    :key="item.value"
+                    :value="item.value"
+                    :label="item.label"
+                  />
+                </el-select>
+              </el-form-item>
+
+              <el-form-item label="响应code" v-show="assertActive === 103">
+                <el-select v-model="caseData.apiAssert.responsecode">
+                  <el-option
+                    v-for="item in respcode"
+                    :key="item.value"
+                    :value="item.value"
+                    :label="item.label"
+                  />
+                </el-select>
+              </el-form-item>
+
+              <el-form-item label="匹配的值" v-show="assertActive===104">
+                <el-input v-model="caseData.apiAssert.fullMatch" />
+              </el-form-item>
+
+              <el-form-item label="响应时间" v-show="assertActive===105">
+                <el-input v-model="caseData.apiAssert.responseTime" />
+              </el-form-item>
+            </div>
+          </div>
+        </el-form-item>
+        <el-form-item style="text-align: right">
           <el-button
             type="primary"
             @click="dialogvisibleTitle==='created'?createdProject():updatedProject()"
@@ -126,7 +186,7 @@
     </el-dialog>
 
     <el-dialog :title="dialogtitle" :visible.sync="dialogvisibleApiInfo" width="1000px">
-      <ApiAdd :apirequest="apirequest" :dialogtitle="dialogtitle"/>
+      <ApiAdd :apirequest="apirequest" :dialogtitle="dialogtitle" />
     </el-dialog>
   </div>
 </template>
@@ -141,16 +201,18 @@ import {
   caseInfo,
   simplecaserecordRun,
   caserecordAdd,
-  caserecordInfo, simplecaserecordLast
+  caserecordInfo, simplecaserecordLast, simplecaseRun
 } from '../../api/case'
 import { apiinfoList } from '../../api/apiinfo'
 import SimpleCase from '../../components/SimpleCase/index'
 import ApiAdd from '../../views/apitest/components/apiadd'
+import common from '../../views/setapitest/components/common'
+import extraction from '../../views/setapitest/components/extraction'
 
 export default {
   name: 'project',
   inject: ['reload'],
-  components: { SimpleCase, ApiAdd },
+  components: { SimpleCase, ApiAdd, common, extraction },
   computed: {
     user () {
       return getUserId()
@@ -180,6 +242,14 @@ export default {
   },
   data () {
     return {
+      methons: this.allEnums.requestMethod,
+      assertype: this.allEnums.assertType,
+      httpcode: this.allEnums.httpCode,
+      respcode: this.allEnums.responseCode,
+
+      caseActiveName: 'first',
+      assertActive: 101,
+
       list: null,
       listLoading: true,
       total: 0,
@@ -221,6 +291,32 @@ export default {
         created: '创建用例'
       },
 
+      caseData: {
+        id: undefined,
+        caseNum: '',
+        caseName: '',
+        caseDesc: '',
+        apiInfo: {
+          apiMethod: null,
+          apiPath: null
+        },
+        apiParams: null,
+        apiHeaders: null,
+        apiBody: null,
+        paramExtrat: null,
+        apiAssert: {
+          type: this.assertActive,
+          httpcode: null,
+          responsecode: null,
+          responseTime: null,
+          // 全文匹配
+          fullMatch: null
+        },
+        createdUser: this.user,
+        updatedUser: this.user,
+        interface: null
+      },
+
       projectForm: {
         id: undefined,
         caseNum: '',
@@ -231,9 +327,6 @@ export default {
         interface: null
       },
       projectrule: {
-        caseNum: [
-          { required: true, message: '请输入用例编号', trigger: 'blur' }
-        ],
         caseName: [
           { required: true, message: '请输入用例名称', trigger: 'blur' }
         ]
@@ -335,6 +428,30 @@ export default {
       }
     },
 
+    resetCaeData () {
+      this.caseData = {
+        id: undefined,
+        caseNum: '',
+        caseName: null,
+        caseDesc: '',
+        apiParams: [],
+        apiHeaders: [],
+        apiBody: [],
+        paramExtrat: [],
+        apiAssert: {
+          type: this.assertActive,
+          httpcode: null,
+          responsecode: null,
+          responseTime: null,
+          // 全文匹配
+          fullMatch: null
+        },
+        createdUser: this.user,
+        updatedUser: this.user,
+        interface: null
+      }
+    },
+
     // 关联接口
     handleRelationApi (row) {
       this.projectForm = Object.assign({}, row)
@@ -393,22 +510,25 @@ export default {
     },
 
     handleUpdate (row) {
-      this.projectForm = Object.assign({}, row)
+      this.caseData = Object.assign({}, row)
+      console.log(this.assertActive)
       this.dialogvisibleTitle = 'updated'
       this.dialogvisibleForm = true
       this.$nextTick(() => {
         this.$refs.ruleform.clearValidate()
       })
     },
-
+    handleRadio (val) {
+      this.assertActive = val
+    },
     updatedProject () {
       this.$refs.ruleform.validate(valid => {
         if (valid) {
-          const tempData = Object.assign({}, this.projectForm)
+          const tempData = Object.assign({}, this.caseData)
+          tempData.apiAssert.type = this.assertActive
           caseUpdate(tempData.id, tempData).then(_ => {
             this.dialogvisibleForm = false
             this.fetchData()
-            location.reload()
             this.$notify({
               title: '成功',
               message: '修改成功',
@@ -429,7 +549,6 @@ export default {
         .then(_ => {
           caseDelete(row.id).then(res => {
             this.fetchData()
-            location.reload()
             this.$notify({
               title: '成功',
               message: '删除成功',
@@ -460,6 +579,20 @@ export default {
         name: 'System',
         query: { id: row.id, name: row.projectName }
       })
+    },
+
+    handleCaseTest (row) {
+      console.log(row)
+
+      simplecaseRun({ caseId: row.id }).then(res => {
+        if (res.code === 20000) {
+          this.$message({
+            message: res.message,
+            type: 'success'
+          })
+          this.fetchData()
+        }
+      })
     }
   }
 }
@@ -467,10 +600,10 @@ export default {
 
 <style scoped>
 .el-input {
-  width: 400px;
+  /*width: 400px;*/
 }
 .el-select {
-  width: 400px;
+  /*width: 400px;*/
 }
 .tag-span {
   margin: 0 20px 0 20px;
@@ -478,6 +611,6 @@ export default {
 }
 .el-table .cell {
   text-align: center;
-  white-space: pre-line;/*保留换行符*/
+  white-space: pre-line; /*保留换行符*/
 }
 </style>

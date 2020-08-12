@@ -118,7 +118,7 @@ export const constantRouterMap = [
             name: 'Process',
             component: () => import(/* webpackChunkName: "about" */ '../views/processcase/index'),
             meta: { title: '流程接口用例', activeMenu: '/testcase' },
-            hidden: false
+            hidden: true
           },
           {
             path: 'processcreate',
@@ -126,19 +126,18 @@ export const constantRouterMap = [
             component: () => import(/* webpackChunkName: "about" */ '../views/processcase/create'),
             meta: { title: '新增流程接口测试用例', activeMenu: '/testcase', index: '/testcase/index/process' },
             hidden: true
+          },
+          {
+            path: 'caseplan',
+            name: 'CasePlan',
+            component: () => import('../views/testplan/index'),
+            meta: { title: '测试计划', activeMenu: '/testcase' }
           }
         ]
 
       }
     ],
     meta: { title: '用例管理', activeMenu: '/testcase' }
-  },
-  {
-    path: '/testplan',
-    name: 'TestPlan',
-    component: () => import(/* webpackChunkName: "about" */ '../views/testplan/index'),
-    meta: { title: '测试计划' },
-    hidden: true
   },
   {
     path: '/system',
@@ -164,7 +163,14 @@ export const constantRouterMap = [
             path: 'setting',
             name: 'Setting',
             component: () => import('../views/project/setting'),
-            meta: { title: '全局配置', activeMenu: '/system' }
+            meta: { title: '全局配置', activeMenu: '/system' },
+            hidden: true
+          },
+          {
+            path: 'variables',
+            name: 'Variables',
+            component: () => import('../views/variables/index'),
+            meta: { title: '全局变量', activeMenu: '/system' }
           },
           {
             path: 'status',

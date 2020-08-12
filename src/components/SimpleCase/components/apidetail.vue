@@ -1,30 +1,33 @@
 <template>
   <div>
-    <div class="request-info">
-      <span>请求信息</span>
-      <el-tabs v-model="activeName1" >
-        <el-tab-pane label="请求参数" name="requestParams">
-          <JsonViewer :value="requestParams" :expand-depth="2" copyable />
-        </el-tab-pane>
-        <el-tab-pane label="请求头" name="requestHeader">
-          <JsonViewer :value="requestHeader" :expand-depth="2" copyable />
-        </el-tab-pane>
-        <el-tab-pane label="请求体" name="requestBody">
-          <JsonViewer :value="requestBody" :expand-depth="2" copyable />
-        </el-tab-pane>
-      </el-tabs>
-    </div>
-    <div class="response-info">
-      <span>响应信息</span>
-      <el-tabs v-model="activeName2" >
-        <el-tab-pane label="响应体" name="responseBody">
-          <JsonViewer :value="responseBody" :expand-depth="2" copyable />
-        </el-tab-pane>
-        <el-tab-pane label="响应头" name="responseHeader">
-          <JsonViewer :value="responseHeader" :expand-depth="2" copyable />
-        </el-tab-pane>
-      </el-tabs>
-    </div>
+    <el-collapse v-model="activeNames">
+      <el-collapse-item title="请求信息" name="1">
+        <el-tabs v-model="activeName1">
+          <el-tab-pane label="请求参数" name="requestParams">
+            <JsonViewer :value="requestParams" :expand-depth="2" copyable />
+          </el-tab-pane>
+          <el-tab-pane label="请求头" name="requestHeader">
+            <JsonViewer :value="requestHeader" :expand-depth="2" copyable />
+          </el-tab-pane>
+          <el-tab-pane label="请求体" name="requestBody">
+            <JsonViewer :value="requestBody" :expand-depth="2" copyable />
+          </el-tab-pane>
+        </el-tabs>
+      </el-collapse-item>
+    </el-collapse>
+
+    <el-collapse v-model="activeNames">
+      <el-collapse-item title="响应信息" name="2">
+        <el-tabs v-model="activeName2">
+          <el-tab-pane label="响应体" name="responseBody">
+            <JsonViewer :value="responseBody" :expand-depth="2" copyable />
+          </el-tab-pane>
+          <el-tab-pane label="响应头" name="responseHeader">
+            <JsonViewer :value="responseHeader" :expand-depth="2" copyable />
+          </el-tab-pane>
+        </el-tabs>
+      </el-collapse-item>
+    </el-collapse>
   </div>
 </template>
 
@@ -47,8 +50,9 @@ export default {
       requestHeader: null,
       requestBody: null,
       responseBody: null,
-      responseHeader: null
+      responseHeader: null,
 
+      activeNames: ['1']
     }
   },
   created () {
@@ -56,31 +60,35 @@ export default {
   },
   methods: {
     checkData () {
+      const info = this.caseresult
       try {
-        this.requestParams = JSON.parse(this.caseresult.requestParams)
+        this.requestParams = JSON.parse(info.requestParams)
       } catch {
-        this.requestParams = this.caseresult.requestParams
+        this.requestParams = info.requestParams
       }
       try {
-        this.requestHeader = JSON.parse(this.caseresult.requestHeader)
+        this.requestHeader = JSON.parse(info.requestHeader)
       } catch {
-        this.requestHeader = this.caseresult.requestHeader
+        this.requestHeader = info.requestHeader
       }
       try {
-        this.requestBody = JSON.parse(this.caseresult.requestBody)
+        this.requestBody = JSON.parse(info.requestBody)
       } catch {
-        this.requestBody = this.caseresult.requestBody
+        this.requestBody = info.requestBody
       }
       try {
-        this.responseBody = JSON.parse(this.caseresult.responseBody)
+        this.responseBody = JSON.parse(info.responseBody)
       } catch {
-        this.responseBody = this.caseresult.responseBody
+        this.responseBody = info.responseBody
       }
       try {
-        this.responseHeader = JSON.parse(this.caseresult.responseHeader)
+        this.responseHeader = JSON.parse(info.responseHeader)
       } catch {
-        this.responseHeader = this.caseresult.responseHeader
+        this.responseHeader = info.responseHeader
       }
+      console.log(this.responseBody)
+      console.log(this.responseHeader)
+      console.log(this.requestBody)
     }
   }
 
@@ -88,5 +96,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

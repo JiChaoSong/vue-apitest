@@ -35,7 +35,15 @@
       </el-table-column>
       <el-table-column label="参数值" align="center">
         <template slot-scope="scope">
-          <el-input v-model="scope.row.value" />
+<!--          <el-input v-model="scope.row.value" />-->
+          <el-select v-model="scope.row.value" filterable allow-create>
+            <el-option
+              v-for="item in variablilist"
+              :key="item.id"
+              :value="item.variableName"
+              :label="item.variableName"
+            />
+          </el-select>
         </template>
       </el-table-column>
       <el-table-column label="说明" align="center">
@@ -64,6 +72,7 @@
 
 <script>
 import { allEnums } from '../../../utils/enum'
+import { variableList } from '../../../api/variable'
 
 export default {
   name: 'common',
@@ -78,11 +87,14 @@ export default {
     return {
       datatype: allEnums.paramType,
       headerSelect: this.allEnums.requestHeader,
-      list: this.requestData
+      list: this.requestData,
+
+      variablilist: null
     }
   },
   created () {
-    console.log(this.requestData)
+    // console.log(this.requestData)
+    this.getVariableList()
   },
   methods: {
     searchBlur (row, e) {
@@ -98,6 +110,13 @@ export default {
     },
     deleteline (index, data) {
       data.splice(index, 1)
+    },
+
+    // 获取全局变量列表
+    getVariableList () {
+      variableList({ page: 1, size: 2147483647 }).then(res => {
+        this.variablilist = res.data.results
+      })
     }
   }
 }

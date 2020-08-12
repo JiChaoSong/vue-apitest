@@ -9,19 +9,11 @@
           <tr>
             <td>
               <el-row :gutter="1">
-                <el-col :span="col1">用例编号</el-col>
-                <el-col :span="col2">{{ apicase.case.caseNum }}</el-col>
-              </el-row>
-            </td>
-            <td rowspan="4"></td>
-          </tr>
-          <tr>
-            <td>
-              <el-row :gutter="1">
                 <el-col :span="col1">用例名称</el-col>
                 <el-col :span="col2">{{ apicase.case.caseName }}</el-col>
               </el-row>
             </td>
+            <td rowspan="3"></td>
           </tr>
           <tr>
             <td>
@@ -35,7 +27,7 @@
             <td>
               <el-row :gutter="1">
                 <el-col :span="col1">运行时长</el-col>
-                <el-col :span="col2">{{ apicase.responseTime }}s</el-col>
+                <el-col :span="col2">{{ apicase.spendTime }}s</el-col>
               </el-row>
             </td>
           </tr>
@@ -166,10 +158,33 @@ table td {
   text-align: justify;
 }
 
-.el-table {
-  /*border: 1px solid #868686;*/
-}
 .cell-class-name {
   border-color: #868686;
+}
+
+.table-expand {
+  padding: 20px 20px !important;
+}
+
+.el-collapse {
+  border: 0;
+  margin-top: 10px;
+}
+.el-calendar__title {
+  border: 0;
+}
+.el-collapse-item__wrap {
+  border: 0;
+  /* margin-top: 10px; */
+}
+.el-collapse-item__header {
+  height: 40px;
+  background-color: #fafafa;
+  border: 0 !important;
+  padding-left: 10px;
+  border-bottom: 0;
+  font-size: 16px;
+  color: #999999;
+  font-weight: bold;
 }
 </style>

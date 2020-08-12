@@ -24,6 +24,11 @@
         <el-input v-model="scope.row.expression" />
       </template>
     </el-table-column>
+    <el-table-column label="是否为全局变量" align="center">
+      <template slot-scope="scope">
+        <el-switch v-model="scope.row.isGloble"/>
+      </template>
+    </el-table-column>
     <el-table-column label="操作" align="center" width="150">
       <template slot-scope="scope">
         <el-button v-if="scope.$index === list.length -1" type="text" @click="addline(list)">新增</el-button>
@@ -64,6 +69,7 @@ export default {
       data.push({
         type: 101,
         label: null,
+        isGloble: false,
         expression: null
       })
     },

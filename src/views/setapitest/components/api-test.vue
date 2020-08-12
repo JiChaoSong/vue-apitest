@@ -295,6 +295,7 @@ export default {
           {
             type: 101,
             label: null,
+            isGloble: false,
             expression: null
           }
         ]
