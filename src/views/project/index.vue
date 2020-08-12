@@ -239,8 +239,6 @@ export default {
 .el-input {
   width: 400px;
 }
-.project-container {
-}
 .tag-span {
   margin: 0 20px 0 20px;
   font-weight: bold;
