@@ -3,7 +3,11 @@
     <el-row>
       <el-dropdown>
         <div class="avtor">
-          <img src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1" class="user-avtor">
+          <span class="title-name">你好, {{name}}</span>
+          <img
+            src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1"
+            class="user-avtor"
+          />
           <i class="el-icon-arrow-down el-icon--right right-icon"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -16,8 +20,22 @@
 </template>
 
 <script>
+import { getName } from '../../../utils/user'
+
 export default {
   name: 'info',
+  data () {
+    return {
+    }
+  },
+  computed: {
+    name () {
+      return getName()
+    }
+  },
+  created () {
+    this.getinfo()
+  },
   methods: {
     async logout () {
       await this.$store.dispatch('user/logout')
@@ -28,13 +46,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .user-avtor {
-    width: 40px;
-    height: 40px;
-    vertical-align: middle;
-    border-radius: 10px;
-  }
-  .right-icon {
-    vertical-align: -10px;
-  }
+.user-avtor {
+  width: 40px;
+  height: 40px;
+  vertical-align: middle;
+  border-radius: 10px;
+}
+.right-icon {
+  vertical-align: -10px;
+}
+.title-name {
+  color: white;
+  padding-right: 10px;
+}
 </style>

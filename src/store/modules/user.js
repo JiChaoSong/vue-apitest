@@ -8,7 +8,7 @@ import {
   setToken
 } from '../../utils/auth'
 import { getinfo, login, logout } from '../../api/user'
-import { getUserId, removeUserId, setUserId } from '../../utils/user'
+import { getUserId, removeUserId, setUserId, getName, setName, removeName } from '../../utils/user'
 
 const getDefaultState = () => {
   return {
@@ -16,7 +16,8 @@ const getDefaultState = () => {
     projectlist: null,
     project: getProject(),
     projectname: getProjectName(),
-    userid: getUserId()
+    userid: getUserId(),
+    name: getName()
   }
 }
 
@@ -35,11 +36,14 @@ const mutations = {
   SET_PROJECTLIST: (state, list) => {
     state.projectlist = list
   },
-  SET_NAME: (state, name) => {
-    state.projectname = name
+  SET_PROJECTNAME: (state, projectName) => {
+    state.projectname = projectName
   },
   SET_USER: (state, userid) => {
     state.userid = userid
+  },
+  SET_NAME: (state, name) => {
+    state.name = name
   }
 }
 
@@ -74,8 +78,12 @@ const actions = {
         if (data.length === 0) {
           reject(new Error('登陆失败, 请重新登陆'))
         }
-        commit('SET_USER', data[0].id)
+
+        const { username, id } = data[0]
+        commit('SET_USER', id)
+        commit('SET_NAME', username)
         setUserId(data[0].id)
+        setName(username)
         const projectlsit = data[0].project
         const project = projectlsit[0].id
         console.log(project)
@@ -83,7 +91,7 @@ const actions = {
         commit('SET_PROJECTLIST', projectlsit)
         commit('SET_Project', project)
         setProject(project)
-        commit('SET_NAME', projectname)
+        commit('SET_PROJECTNAME', projectname)
         setProjectName(projectname)
         resolve(data)
       }).catch(error => {
@@ -98,6 +106,7 @@ const actions = {
         removeProjectName()
         removeToken() // must remove  token  first
         removeUserId()
+        removeName()
         commit('RESET_STATE')
         resolve()
       }).catch(error => {

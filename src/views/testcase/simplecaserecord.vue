@@ -38,6 +38,7 @@
       :visible.sync="dialogvisibleReport"
       width="1000px"
       class="create-case-dialog"
+      @close="handleClose"
     >
       <SimpleCase :apicase="recordCase" />
     </el-dialog>
@@ -111,8 +112,12 @@ export default {
         .catch(_ => { })
     },
 
+    handleClose () {
+      this.recordCase = {}
+    },
+
     handleView (row) {
-      this.recordCase = null
+      this.recordCase = {}
       this.recordCase = Object.assign({}, row)
       this.dialogvisibleReport = true
       console.log(this.recordCase)
@@ -121,6 +126,10 @@ export default {
     handleCurrentChange (val) {
       this.listQuery.page = val
       this.fetchData()
+    },
+
+    indexMethod (index) {
+      return (this.listQuery.page - 1) * this.listQuery.size + (index + 1)
     }
   }
 }
