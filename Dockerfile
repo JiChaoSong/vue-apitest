@@ -7,9 +7,11 @@ WORKDIR /app
 
 COPY . /app
 
-COPY ./nginx/nginx.conf /etc/nginx/conf.d
+RUN rm /etc/nginx/conf.d/default.conf
+
+COPY nginx/default.conf /etc/nginx/conf.d
 # 拷贝前端vue项目打包后生成的文件到nginx下运行
-COPY ./dist /usr/share/nginx/html
+COPY dist/ /usr/share/nginx/html
 
 # 暴露8101端口
 EXPOSE 9528
