@@ -34,7 +34,6 @@ export default {
     }
   },
   created () {
-    this.getinfo()
   },
   methods: {
     async logout () {

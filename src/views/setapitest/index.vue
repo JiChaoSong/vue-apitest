@@ -50,7 +50,7 @@
         <template slot-scope="scope">{{scope.row.apiPath}}</template>
       </el-table-column>
       <el-table-column label="更新时间" align="center">
-        <template slot-scope="scope">{{scope.row.updateTime | formatDate}}</template>
+        <template slot-scope="scope">{{scope.row.updatedTime | formatDate}}</template>
       </el-table-column>
     </el-table>
     <el-dialog title="导入接口" :visible.sync="dialogvisibleImport" width="800px">

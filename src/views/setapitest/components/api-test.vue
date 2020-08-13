@@ -344,10 +344,11 @@ export default {
     testAndUpdate () {
       apiinfoTest(this.requestData).then(res => {
         if (res.code === 20000) {
-          this.$message({
-            message: res.message,
-            type: 'success'
-          })
+          this.testResult = res.data
+          try {
+            this.testResult.responseBody = JSON.parse(this.testResult.responseBody)
+          } catch {
+          }
           apiinfoUpdate(this.$route.query.id, this.requestData).then(ret => {
             if (ret.code === 20000) {
               this.$message({

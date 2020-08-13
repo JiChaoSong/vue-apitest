@@ -2,6 +2,7 @@ import Cookies from 'js-cookie'
 
 const UserId = 'user'
 const Name = 'name'
+const UserInfo = 'userinfo'
 
 export function getUserId () {
   return Cookies.get(UserId)
@@ -25,4 +26,16 @@ export function setName (name) {
 
 export function removeName () {
   return Cookies.remove(Name)
+}
+
+export function getUserInfo () {
+  return Cookies.get(UserInfo)
+}
+
+export function serUserInfo (info) {
+  return Cookies.set(UserInfo, info)
+}
+
+export function removeUserInfo () {
+  return Cookies.remove(UserInfo)
 }

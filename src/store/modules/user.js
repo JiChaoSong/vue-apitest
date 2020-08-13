@@ -8,7 +8,7 @@ import {
   setToken
 } from '../../utils/auth'
 import { getinfo, login, logout } from '../../api/user'
-import { getUserId, removeUserId, setUserId, getName, setName, removeName } from '../../utils/user'
+import { getUserId, removeUserId, setUserId, getName, setName, removeName, getUserInfo, serUserInfo, removeUserInfo } from '../../utils/user'
 
 const getDefaultState = () => {
   return {
@@ -17,7 +17,8 @@ const getDefaultState = () => {
     project: getProject(),
     projectname: getProjectName(),
     userid: getUserId(),
-    name: getName()
+    name: getName(),
+    info: getUserInfo()
   }
 }
 
@@ -79,6 +80,7 @@ const actions = {
           reject(new Error('登陆失败, 请重新登陆'))
         }
 
+        serUserInfo(data[0])
         const { username, id } = data[0]
         commit('SET_USER', id)
         commit('SET_NAME', username)
@@ -107,6 +109,7 @@ const actions = {
         removeToken() // must remove  token  first
         removeUserId()
         removeName()
+        removeUserInfo()
         commit('RESET_STATE')
         resolve()
       }).catch(error => {
@@ -121,6 +124,7 @@ const actions = {
       removeProject()
       removeProjectName()
       removeUserId()
+      removeUserInfo()
       commit('RESET_STATE')
       resolve()
     })

@@ -10,15 +10,17 @@
       router
     >
       <div class="header-logo">
-        <logo/>
+        <logo />
       </div>
       <div v-for="route in routes" :key="route.path" class="menu-item">
-        <el-menu-item v-if="!route.hidden" :index="route.path" :route="route.path">
-          {{route.meta.title}}
-        </el-menu-item>
+        <el-menu-item
+          v-if="!route.hidden"
+          :index="route.path"
+          :route="route.path"
+        >{{route.meta.title}}</el-menu-item>
       </div>
       <div class="header-info">
-        <info/>
+        <info />
       </div>
     </el-menu>
   </div>
@@ -55,47 +57,49 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .menu-container {
-    width: 100%;
-    display: inline-block;
-  }
-  .header-sidebar {
-    width: 100%;
-    padding: 0 20px 0 20px;
-    position: relative;
-  }
-  .header-logo{
-    float: left;
-    margin-top: 10px;
-    width: 20%;
-  }
-  .header-info {
-    /*position: fixed;*/
-    float: right;
-    text-align: right;
-    margin-top: 10px;
-    width: 20%;
-  }
-  .menu-item {
-    white-space: nowrap;
-    display: inline-block;
-  }
-  .el-menu-item.is-active {
-    color: white !important;
-    border-bottom: 5px solid #1890ff !important;
-  }
-  .el-menu-item:not(.is-disabled):hover {
-    background-color: #1890ff !important;
-  }
-  .el-menu-item:focus {
-    background-color: #1890ff !important;
-  }
-  .el-submenu:hover.el-submenu__title {
-    background-color: #1890ff !important;
-  }
-  .el-menu-item {
-    font-size: 16px !important;
-    width: 100px !important;
-    text-align: center !important;
-  }
+.menu-container {
+  width: 100%;
+  display: inline-block;
+}
+.header-sidebar {
+  width: 100%;
+  padding: 0 20px 0 20px;
+  position: relative;
+}
+.header-logo {
+  float: left;
+  margin: 0 auto;
+  top: 50%;
+  transform: translateY(65%);
+  width: 20%;
+}
+.header-info {
+  /*position: fixed;*/
+  float: right;
+  text-align: right;
+  margin-top: 10px;
+  width: 20%;
+}
+.menu-item {
+  white-space: nowrap;
+  display: inline-block;
+}
+.el-menu-item.is-active {
+  color: white !important;
+  border-bottom: 5px solid #1890ff !important;
+}
+.el-menu-item:not(.is-disabled):hover {
+  background-color: #1890ff !important;
+}
+.el-menu-item:focus {
+  background-color: #1890ff !important;
+}
+.el-submenu:hover.el-submenu__title {
+  background-color: #1890ff !important;
+}
+.el-menu-item {
+  font-size: 16px !important;
+  width: 100px !important;
+  text-align: center !important;
+}
 </style>

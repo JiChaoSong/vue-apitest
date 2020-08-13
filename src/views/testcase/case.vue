@@ -376,7 +376,7 @@ export default {
     this.getCaseinfo(this.caseinformation.id)
   },
   methods: {
-    fetchData () {
+    async fetchData () {
       this.listLoading = true
       caseList(this.listQuery).then(res => {
         this.list = res.data.results
