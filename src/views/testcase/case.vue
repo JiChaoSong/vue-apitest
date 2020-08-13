@@ -31,10 +31,10 @@
         <template slot-scope="scope">{{scope.row.runcount}}</template>
       </el-table-column>
       <el-table-column label="创建人" align="center">
-        <template slot-scope="scope">{{scope.row.created_User}}</template>
+        <template slot-scope="scope">{{scope.row.createdUser.username}}</template>
       </el-table-column>
       <el-table-column label="修改人" align="center">
-        <template slot-scope="scope">{{scope.row.updated_User}}</template>
+        <template slot-scope="scope">{{scope.row.updatedUser.username}}</template>
       </el-table-column>
 
       <el-table-column label="操作" align="center" width="250px">
@@ -370,7 +370,7 @@ export default {
   },
   created () {
     this.fetchData()
-    this.getapiList()
+    // this.getapiList()
   },
   mounted () {
     this.getCaseinfo(this.caseinformation.id)

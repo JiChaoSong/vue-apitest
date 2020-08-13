@@ -2,26 +2,32 @@
   <div class="project-container">
     <div class="filter-container">
       <el-form :inline="true" :model="listQuery" size="small">
-        <el-form-item label="接口名称" prop="apiName">
-          <el-input v-model="listQuery.apiNames" size="small" class="filter-input" />
-        </el-form-item>
-        <el-form-item label="接口地址" prop="apiPath">
-          <el-input v-model="listQuery.apiPaths" size="small" class="filter-input" />
-        </el-form-item>
-        <el-form-item label="请求方法" prop="apiMethod">
-          <el-select v-model="listQuery.apiMethods" size="small" class="filter-input">
-            <el-option
-              v-for="item in Methods"
-              :key="item.value"
-              :value="item.value"
-              :label="item.label"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="fetchData" size="small">查询</el-button>
-          <el-button @click="resetListQuery" size="small">重置</el-button>
-        </el-form-item>
+        <el-row>
+          <el-col :span="21">
+            <el-form-item label="接口名称" prop="apiName">
+              <el-input v-model="listQuery.apiNames" size="small" class="filter-input" />
+            </el-form-item>
+            <el-form-item label="接口地址" prop="apiPath">
+              <el-input v-model="listQuery.apiPaths" size="small" class="filter-input" />
+            </el-form-item>
+            <el-form-item label="请求方法" prop="apiMethod">
+              <el-select v-model="listQuery.apiMethods" size="small" class="filter-input">
+                <el-option
+                  v-for="item in Methods"
+                  :key="item.value"
+                  :value="item.value"
+                  :label="item.label"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
+            <el-form-item>
+              <el-button type="primary" @click="fetchData" size="small">查询</el-button>
+              <el-button @click="resetListQuery" size="small">重置</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
     </div>
     <div class="operation-container">
@@ -46,14 +52,6 @@
       <el-table-column label="更新时间" align="center">
         <template slot-scope="scope">{{scope.row.updateTime | formatDate}}</template>
       </el-table-column>
-
-      <!-- <el-table-column label="操作" align="center" width="250px">
-        <template slot-scope="{row}">
-          <el-button type="text" @click="getLastCaseRecotd(row)">查看</el-button>
-          <el-button type="text" @click="handleUpdate(row)">编辑</el-button>
-          <el-button type="text" style="color: #f95359" @click="deleteProject(row)">删除</el-button>
-        </template>
-      </el-table-column>-->
     </el-table>
     <el-dialog title="导入接口" :visible.sync="dialogvisibleImport" width="800px">
       <el-form ref="apiImport" :model="apiImport" :rules="apiImportRule" label-width="120px">
@@ -217,6 +215,6 @@ export default {
   white-space: pre-line; /*保留换行符*/
 }
 .filter-input {
-  width: 280px;
+  width: 270px;
 }
 </style>
