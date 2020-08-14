@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="path-button">
       <el-row :gutter="10">
-        <el-col :span="19">
+        <el-col :span="16">
           <el-input v-model="requestData.apiPath">
             <el-select v-model="requestData.apiMethod" slot="prepend" class="select-method">
               <el-option
@@ -15,20 +15,15 @@
             </el-select>
           </el-input>
         </el-col>
-        <el-col :span="5">
-          <el-row :gutter="5">
-            <el-col :span="12">
-              <el-button type="success" @click="handleCreateCase">新建用例</el-button>
-            </el-col>
-            <el-col :span="12">
-              <el-dropdown split-button type="primary" @click="subcommit" @command="handleConmand">
-                测试
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item command="save">保存并测试</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </el-col>
-          </el-row>
+        <el-col :span="8">
+            <el-button type="success" @click="handleCreateCase" style="margin-right: 5px">新建用例</el-button>
+            <el-dropdown split-button type="primary" @click="subcommit" @command="handleConmand">
+              测试
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="save">保存并测试</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+
         </el-col>
       </el-row>
     </div>

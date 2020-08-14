@@ -2,7 +2,7 @@ import router from './router'
 import store from './store'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
-import { getProject, getToken, removeToken } from './utils/auth'
+import { getToken, removeToken } from './utils/auth'
 
 NProgress.configure({ showSpinner: false })
 
@@ -12,13 +12,13 @@ router.beforeEach(async (to, from, next) => {
   NProgress.start()
 
   const hasToken = getToken()
+  // const hasToken = getters.token
   if (hasToken) {
     if (to.path === '/login') {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const hasproject = getProject()
-      if (hasproject === undefined) {
+      if (store.getters.projectlist === null) {
         store.dispatch('user/getInfo').then(resp => {
           next({
             ...to,

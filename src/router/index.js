@@ -117,21 +117,22 @@ export const constantRouterMap = [
             path: 'process',
             name: 'Process',
             component: () => import(/* webpackChunkName: "about" */ '../views/processcase/index'),
-            meta: { title: '流程接口用例', activeMenu: '/testcase' },
-            hidden: true
+            meta: { title: '测试集管理', activeMenu: '/testcase' },
+            hidden: false
           },
           {
             path: 'processcreate',
             name: 'ProcessCreate',
             component: () => import(/* webpackChunkName: "about" */ '../views/processcase/create'),
-            meta: { title: '新增流程接口测试用例', activeMenu: '/testcase', index: '/testcase/index/process' },
+            meta: { title: '测试集信息', activeMenu: '/testcase', index: '/testcase/index/process' },
             hidden: true
           },
           {
             path: 'caseplan',
             name: 'CasePlan',
             component: () => import('../views/testplan/index'),
-            meta: { title: '测试计划', activeMenu: '/testcase' }
+            meta: { title: '测试计划', activeMenu: '/testcase' },
+            hidden: true
           }
         ]
 

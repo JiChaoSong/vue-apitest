@@ -70,7 +70,7 @@ export default {
   float: left;
   margin: 0 auto;
   top: 50%;
-  transform: translateY(65%);
+  transform: translateY(55%);
   width: 20%;
 }
 .header-info {

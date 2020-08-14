@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view />
+    <router-view v-if="isRouterAlive" />
   </div>
 </template>
 
@@ -33,7 +33,7 @@ export default {
 <style>
 #app {
   background-color: #f2f6fc;
-  min-width: 1920px;
+  min-width: 1340px;
   height: 100%;
   width: 100%;
   position: absolute;

@@ -3,14 +3,11 @@
     <el-collapse v-model="activeNames">
       <el-collapse-item title="请求信息" name="1">
         <el-tabs v-model="activeName1">
-          <el-tab-pane label="请求参数" name="requestParams">
-            <JsonViewer :value="requestParams" :expand-depth="2" copyable />
+          <el-tab-pane label="请求体" name="requestBody">
+            <JsonViewer :value="requestBody" :expand-depth="2" copyable />
           </el-tab-pane>
           <el-tab-pane label="请求头" name="requestHeader">
             <JsonViewer :value="requestHeader" :expand-depth="2" copyable />
-          </el-tab-pane>
-          <el-tab-pane label="请求体" name="requestBody">
-            <JsonViewer :value="requestBody" :expand-depth="2" copyable />
           </el-tab-pane>
         </el-tabs>
       </el-collapse-item>
@@ -44,7 +41,7 @@ export default {
   },
   data () {
     return {
-      activeName1: 'requestParams',
+      activeName1: 'requestBody',
       activeName2: 'responseBody',
       requestParams: null,
       requestHeader: null,

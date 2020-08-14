@@ -1,15 +1,19 @@
 <template>
   <div class="project-container">
     <div class="filter-container">
-      <el-form :inline="true" :model="listQuery" size="small">
-        <el-row>
-          <el-col :span="21">
+      <el-form  :model="listQuery" size="small" label-position="left" inline="true">
+        <el-row :gutter="1">
+          <el-col :span="6">
             <el-form-item label="接口名称" prop="apiName">
               <el-input v-model="listQuery.apiNames" size="small" class="filter-input" />
             </el-form-item>
+          </el-col>
+          <el-col :span="6">
             <el-form-item label="接口地址" prop="apiPath">
               <el-input v-model="listQuery.apiPaths" size="small" class="filter-input" />
             </el-form-item>
+          </el-col>
+          <el-col :span="6">
             <el-form-item label="请求方法" prop="apiMethod">
               <el-select v-model="listQuery.apiMethods" size="small" class="filter-input">
                 <el-option
@@ -21,7 +25,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="3">
+        </el-row>
+        <el-row>
+          <el-col :span="6">
             <el-form-item>
               <el-button type="primary" @click="fetchData" size="small">查询</el-button>
               <el-button @click="resetListQuery" size="small">重置</el-button>
@@ -215,6 +221,6 @@ export default {
   white-space: pre-line; /*保留换行符*/
 }
 .filter-input {
-  width: 270px;
+  width: 100%;
 }
 </style>

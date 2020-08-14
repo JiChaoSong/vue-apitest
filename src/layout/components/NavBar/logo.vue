@@ -1,41 +1,30 @@
 <template>
   <div class="logo">
-    <el-row :gutter="10">
-      <!-- <el-col :span="14">
-        <div class="sidebar-logo-container">
-          <el-row>
-            <el-col :span="6">
-              <router-link to="/">
-                <img :src="logo" class="sidebar-logo-link" />
-              </router-link>
-            </el-col>
-            <el-col :span="18">
-              <router-link to="/">
-                <span class="project-title">{{ title }}</span>
-              </router-link>
-            </el-col>
-          </el-row>
+    <el-row :gutter="30">
+      <el-col :span="4">
+        <div>
+          <img :src="logo" class="sidebar-logo-link" />
         </div>
-      </el-col>-->
-      <el-col :span="10">
-        <span class="title">{{title}}</span>
       </el-col>
       <el-col :span="10">
-        <div class="projectsitem">
-          <el-dropdown>
-            <div class="project-title">
-              {{titlename}}
-              <i class="el-icon-arrow-down el-icon--right right-icon"></i>
-            </div>
-            <el-dropdown-menu>
-              <el-dropdown-item
-                v-for="item in user.project"
-                :key="item.id"
-                @click.native="handlesetProjects(item.id, item.projectName)"
-              >{{item.projectName}}</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+        <div>
+          <span class="project-title">{{title}}</span>
         </div>
+      </el-col>
+      <el-col :span="10">
+        <el-dropdown>
+          <div class="project-title">
+            <span class="span-title">{{titlename}}</span>
+            <i class="el-icon-arrow-down el-icon--right right-icon"></i>
+          </div>
+          <el-dropdown-menu>
+            <el-dropdown-item
+              v-for="item in projectlist"
+              :key="item.id"
+              @click.native="handlesetProjects(item.id, item.projectName)"
+            >{{item.projectName}}</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </el-col>
     </el-row>
   </div>
@@ -51,7 +40,8 @@ export default {
   computed: {
     ...mapGetters([
       'projects',
-      'projectname'
+      'projectname',
+      'projectlist'
     ]),
     titlename () {
       return getProjectName()
@@ -79,7 +69,8 @@ export default {
     handlesetProjects (id, name) {
       setProject(id)
       setProjectName(name)
-      location.reload()
+      this.reload()
+      // location.reload()
     },
 
     handlechange () {
@@ -90,10 +81,10 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less">
 .sidebar-logo-link {
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   vertical-align: middle;
 }
 .logo {
@@ -101,25 +92,22 @@ export default {
   width: 100%;
 }
 .project-title {
-  width: auto;
   color: white;
-  font-size: 18px;
-  margin: 0 auto;
+  font-size: 16px;
   vertical-align: middle;
   white-space: nowrap;
+  width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  .span-title {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 }
+
 .sidebar-logo-container {
   width: 100%;
   /*height: 50px;*/
-}
-
-.title {
-  width: auto;
-  color: white;
-  font-size: 18px;
-  /* margin: 0 auto; */
-  /* vertical-align: middle; */
-  /* white-space: nowrap; */
-  /* top: 50%; */
 }
 </style>

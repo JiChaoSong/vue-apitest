@@ -1,7 +1,13 @@
 <template>
   <div class="project-container">
     <div class="operation-container">
-      <el-button type="primary" icon="el-icon-plus" size="small" @click="handleCreate">新增</el-button>
+      <!-- <el-button type="primary" icon="el-icon-plus" size="small" @click="handleCreate">新增</el-button> -->
+      <!-- <el-button
+        type="primary"
+        icon="el-icon-caret-right"
+        size="small"
+        @click="handleMutCaseRun"
+      >批量执行</el-button>-->
     </div>
     <el-table
       v-loading="listLoading"
@@ -10,7 +16,11 @@
       size="small"
       :row-style="{height: '20px'}"
       :cell-style="{padding:'5px'}"
+      @selection-change="handleSelectionChange"
+      ref="multipleTable"
+      :row-key="getRowKeys"
     >
+      <el-table-column type="selection" width="55" :reserve-selection="true" align="center" />
       <el-table-column align="center" label="#" width="65px  " :index="indexMethod" type="index" />
       <el-table-column label="用例名称" align="center">
         <template slot-scope="scope">{{scope.row.caseName}}</template>
@@ -67,7 +77,7 @@
           <el-input v-model="caseData.caseName" placeholder="请输入用例名称" />
         </el-form-item>
         <el-form-item label="关联接口:" prop="interface" v-if="dialogvisibleTitle==='created'">
-          <el-select v-model="caseData.interface" filterable placeholder="请选择">
+          <el-select v-model="caseData.interface" filterable placeholder="请选择" style="width: 100%">
             <el-option
               v-for="item in apiinfolist"
               :key="item.id"
@@ -122,7 +132,7 @@
               </el-radio-group>
             </div>
             <div class="select-assert">
-              <el-form-item label="http状态码" v-show="assertActive === 102">
+              <el-form-item label="http状态码" v-if="caseData.apiAssert.type === 102">
                 <el-select v-model="caseData.apiAssert.httpcode">
                   <el-option
                     v-for="item in httpcode"
@@ -133,7 +143,7 @@
                 </el-select>
               </el-form-item>
 
-              <el-form-item label="响应code" v-show="assertActive === 103">
+              <el-form-item label="响应code" v-if="caseData.apiAssert.type === 103">
                 <el-select v-model="caseData.apiAssert.responsecode">
                   <el-option
                     v-for="item in respcode"
@@ -144,11 +154,11 @@
                 </el-select>
               </el-form-item>
 
-              <el-form-item label="匹配的值" v-show="assertActive===104">
+              <el-form-item label="匹配的值" v-if="caseData.apiAssert.type===104">
                 <el-input v-model="caseData.apiAssert.fullMatch" />
               </el-form-item>
 
-              <el-form-item label="响应时间" v-show="assertActive===105">
+              <el-form-item label="响应时间" v-if="caseData.apiAssert.type===105">
                 <el-input v-model="caseData.apiAssert.responseTime" />
               </el-form-item>
             </div>
@@ -167,7 +177,7 @@
     <el-dialog title="关联接口" :visible.sync="dialogvisibleRelation" width="600px">
       <el-form label-width="100px" ref="apiinfoForm" :rules="apiinfoFormRule" :model="apiinfoForm">
         <el-form-item label="关联接口:" prop="apiinfoId">
-          <el-select v-model="apiinfoForm.apiinfoId" filterable placeholder="请选择">
+          <el-select @change="handleSelectApi" v-model="apiinfoForm.apiinfoId" placeholder="请选择">
             <el-option
               v-for="item in apiinfolist"
               :key="item.id"
@@ -365,12 +375,15 @@ export default {
         caseName: [
           { required: true, message: '请输入用例名称', trigger: 'blur' }
         ]
-      }
+      },
+      valId: null,
+
+      // 多选选中列表
+      multipleSelection: []
     }
   },
   created () {
     this.fetchData()
-    // this.getapiList()
   },
   mounted () {
     this.getCaseinfo(this.caseinformation.id)
@@ -464,12 +477,16 @@ export default {
       this.caseData = {
         id: undefined,
         caseNum: '',
-        caseName: null,
+        caseName: '',
         caseDesc: '',
-        apiParams: [],
-        apiHeaders: [],
-        apiBody: [],
-        paramExtrat: [],
+        apiInfo: {
+          apiMethod: null,
+          apiPath: null
+        },
+        apiParams: null,
+        apiHeaders: null,
+        apiBody: null,
+        paramExtrat: null,
         apiAssert: {
           type: this.assertActive,
           httpcode: null,
@@ -514,8 +531,15 @@ export default {
       })
     },
 
+    // 关联接口下拉选择改变事件
+    handleSelectApi (val) {
+      console.log('选择了', val)
+    },
+
+    // 新增用例
     handleCreate () {
-      this.resetprojectform()
+      this.resetCaeData()
+      this.getapiList()
       this.dialogvisibleTitle = 'created'
       this.dialogvisibleForm = true
       this.$nextTick(() => {
@@ -526,10 +550,9 @@ export default {
     createdProject () {
       this.$refs.ruleform.validate(valid => {
         if (valid) {
-          caseAdd(this.projectForm).then(_ => {
+          caseAdd(this.caseData).then(_ => {
             this.dialogvisibleForm = false
             this.fetchData()
-            location.reload()
             this.$notify({
               title: '成功',
               message: '添加成功',
@@ -542,6 +565,8 @@ export default {
     },
 
     handleUpdate (row) {
+      this.resetprojectform()
+      this.resetCaeData()
       this.caseData = Object.assign({}, row)
       console.log(this.assertActive)
       this.dialogvisibleTitle = 'updated'
@@ -558,6 +583,8 @@ export default {
         if (valid) {
           const tempData = Object.assign({}, this.caseData)
           tempData.apiAssert.type = this.assertActive
+          tempData.createdUser = tempData.createdUser.id
+          tempData.updatedUser = this.user
           caseUpdate(tempData.id, tempData).then(_ => {
             this.dialogvisibleForm = false
             this.fetchData()
@@ -618,11 +645,11 @@ export default {
 
       simplecaseRun({ caseId: row.id }).then(res => {
         if (res.code === 20000) {
+          this.fetchData()
           this.$message({
             message: res.message,
             type: 'success'
           })
-          this.fetchData()
         }
       })
     },
@@ -644,6 +671,8 @@ export default {
         this.$refs.caseCopyData.clearValidate()
       })
     },
+
+    // 复制用例
     copyCase () {
       this.$refs.caseCopyData.validate((valid) => {
         if (valid) {
@@ -668,6 +697,29 @@ export default {
     handlecancelCopy () {
       this.resetCaseCopy()
       this.dialogvisibleCopy = false
+    },
+
+    // 确定唯一的key值
+    getRowKeys (row) {
+      return row.id // 每条数据的唯一识别值
+    },
+
+    // 列表多选事件
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+      console.log(this.multipleSelection)
+    },
+
+    // 清空选择的值
+    clearSelect () {
+      this.$refs.multipleTable.clearSelection()
+    },
+
+    // 用例批量执行
+    handleMutCaseRun () {
+      if (this.multipleSelection.length === 0) {
+        this.$message.error('请选择用例')
+      }
     }
   }
 }
