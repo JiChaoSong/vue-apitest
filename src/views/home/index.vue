@@ -16,6 +16,11 @@
           用例总数: {{list.caseCount}}
         </div>
       </el-col>
+      <el-col :span="span1">
+        <div class="card-content">
+          报告总数: {{list.recordCount}}
+        </div>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -29,7 +34,7 @@ export default {
   name: 'index',
   data () {
     return {
-      span1: 8,
+      span1: 6,
 
       listQuery: {
         page: 1,

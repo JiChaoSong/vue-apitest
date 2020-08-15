@@ -107,3 +107,11 @@ export function simplecaserecordLast (data) {
     data
   })
 }
+
+export function caseSetAdd (data) {
+  return request({
+    url: '/caseset/add',
+    method: 'post',
+    data
+  })
+}

@@ -72,106 +72,7 @@
       :visible.sync="dialogvisibleForm"
       width="1200px"
     >
-      <el-form ref="ruleform" :model="caseData" :rules="projectrule" label-position="top">
-        <el-form-item label="用例名称:" prop="caseName">
-          <el-input v-model="caseData.caseName" placeholder="请输入用例名称" />
-        </el-form-item>
-        <el-form-item label="关联接口:" prop="interface" v-if="dialogvisibleTitle==='created'">
-          <el-select v-model="caseData.interface" filterable placeholder="请选择" style="width: 100%">
-            <el-option
-              v-for="item in apiinfolist"
-              :key="item.id"
-              :value="item.id"
-              :label="item.apiName"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="接口路径">
-          <el-input v-model="caseData.apiInfo.apiPath" :disabled="true">
-            <el-select
-              v-model="caseData.apiInfo.apiMethod"
-              slot="prepend"
-              class="select-method"
-              :disabled="true"
-            >
-              <el-option
-                v-for="item in methons"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-input>
-        </el-form-item>
-        <el-form-item label="请求参数">
-          <el-tabs v-model="caseActiveName" type="card">
-            <el-tab-pane label="Query参数" name="first">
-              <common :request-data="caseData.apiParams" />
-            </el-tab-pane>
-            <el-tab-pane label="请求头" name="second">
-              <common :request-data="caseData.apiHeaders" lables="header" />
-            </el-tab-pane>
-            <el-tab-pane label="请求体" name="third">
-              <common :request-data="caseData.apiBody" lables="body" />
-            </el-tab-pane>
-            <el-tab-pane label="参数提取" name="four">
-              <extraction :list="caseData.paramExtrat" />
-            </el-tab-pane>
-          </el-tabs>
-        </el-form-item>
-        <el-form-item label="断言">
-          <div class="assert-style">
-            <div class="radio-style">
-              <el-radio-group v-model="caseData.apiAssert.type" @change="handleRadio">
-                <el-radio
-                  v-for="item in assertype"
-                  :label="item.value"
-                  :key="item.value"
-                  :disabled="item.disabled"
-                >{{item.label}}</el-radio>
-              </el-radio-group>
-            </div>
-            <div class="select-assert">
-              <el-form-item label="http状态码" v-if="caseData.apiAssert.type === 102">
-                <el-select v-model="caseData.apiAssert.httpcode">
-                  <el-option
-                    v-for="item in httpcode"
-                    :key="item.value"
-                    :value="item.value"
-                    :label="item.label"
-                  />
-                </el-select>
-              </el-form-item>
-
-              <el-form-item label="响应code" v-if="caseData.apiAssert.type === 103">
-                <el-select v-model="caseData.apiAssert.responsecode">
-                  <el-option
-                    v-for="item in respcode"
-                    :key="item.value"
-                    :value="item.value"
-                    :label="item.label"
-                  />
-                </el-select>
-              </el-form-item>
-
-              <el-form-item label="匹配的值" v-if="caseData.apiAssert.type===104">
-                <el-input v-model="caseData.apiAssert.fullMatch" />
-              </el-form-item>
-
-              <el-form-item label="响应时间" v-if="caseData.apiAssert.type===105">
-                <el-input v-model="caseData.apiAssert.responseTime" />
-              </el-form-item>
-            </div>
-          </div>
-        </el-form-item>
-        <el-form-item style="text-align: right">
-          <el-button
-            type="primary"
-            @click="dialogvisibleTitle==='created'?createdProject():updatedProject()"
-          >保存</el-button>
-          <el-button @click="handlecancel">取消</el-button>
-        </el-form-item>
-      </el-form>
+      <CaseView :case-data="caseData" @dialogStatus="handledialogstatus" />
     </el-dialog>
 
     <el-dialog title="关联接口" :visible.sync="dialogvisibleRelation" width="600px">
@@ -235,13 +136,12 @@ import {
 import { apiinfoList } from '../../api/apiinfo'
 import SimpleCase from '../../components/SimpleCase/index'
 import ApiAdd from '../../views/apitest/components/apiadd'
-import common from '../../views/setapitest/components/common'
-import extraction from '../../views/setapitest/components/extraction'
+import CaseView from '../../components/CaseVIew/index'
 
 export default {
   name: 'project',
   inject: ['reload'],
-  components: { SimpleCase, ApiAdd, common, extraction },
+  components: { SimpleCase, ApiAdd, CaseView },
   computed: {
     user () {
       return getUserId()
@@ -418,6 +318,10 @@ export default {
         this.fullscreenLoading = false
         clearTimeout(this.timer)
       }
+    },
+
+    handledialogstatus (data) {
+      this.dialogvisibleForm = data
     },
 
     // 点击接口详情

@@ -83,9 +83,6 @@ export default {
       } catch {
         this.responseHeader = info.responseHeader
       }
-      console.log(this.responseBody)
-      console.log(this.responseHeader)
-      console.log(this.requestBody)
     }
   }
 

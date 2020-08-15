@@ -108,90 +108,7 @@
       width="1200px"
       class="create-case-dialog"
     >
-      <el-form ref="caseDataForm" :model="caseData" :rules="caseDataRule" label-position="top">
-        <el-form-item label="用例名称" prop="caseName">
-          <el-input v-model="caseData.caseName" />
-        </el-form-item>
-
-        <el-form-item label="ApiPath">
-          <el-input v-model="requestData.apiPath">
-            <el-select v-model="requestData.apiMethod" slot="prepend" class="select-method">
-              <el-option
-                v-for="item in methons"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-input>
-        </el-form-item>
-        <el-form-item label="请求参数">
-          <el-tabs v-model="caseActiveName" type="card">
-            <el-tab-pane label="Query参数" name="first">
-              <common :request-data="caseData.apiParams" />
-            </el-tab-pane>
-            <el-tab-pane label="请求头" name="second">
-              <common :request-data="caseData.apiHeaders" lables="header" />
-            </el-tab-pane>
-            <el-tab-pane label="请求体" name="third">
-              <common :request-data="caseData.apiBody" lables="body" />
-            </el-tab-pane>
-            <el-tab-pane label="参数提取" name="four">
-              <extraction :list="caseData.paramExtrat" />
-            </el-tab-pane>
-          </el-tabs>
-        </el-form-item>
-
-        <el-form-item label="断言">
-          <div class="assert-style">
-            <div class="radio-style">
-              <el-radio-group v-model="assertActive" @click="handleRadio">
-                <el-radio
-                  v-for="item in assertype"
-                  :label="item.value"
-                  :key="item.value"
-                  :disabled="item.disabled"
-                >{{item.label}}</el-radio>
-              </el-radio-group>
-            </div>
-            <div class="select-assert">
-              <el-form-item label="http状态码" v-show="assertActive === 102">
-                <el-select v-model="caseData.apiAssert.httpcode">
-                  <el-option
-                    v-for="item in httpcode"
-                    :key="item.value"
-                    :value="item.value"
-                    :label="item.label"
-                  />
-                </el-select>
-              </el-form-item>
-
-              <el-form-item label="响应code" v-show="assertActive === 103">
-                <el-select v-model="caseData.apiAssert.responsecode">
-                  <el-option
-                    v-for="item in respcode"
-                    :key="item.value"
-                    :value="item.value"
-                    :label="item.label"
-                  />
-                </el-select>
-              </el-form-item>
-
-              <el-form-item label="匹配的值" v-show="assertActive===104">
-                <el-input v-model="caseData.apiAssert.fullMatch" />
-              </el-form-item>
-
-              <el-form-item label="响应时间" v-show="assertActive===105">
-                <el-input v-model="caseData.apiAssert.responseTime" />
-              </el-form-item>
-            </div>
-          </div>
-        </el-form-item>
-
-        <el-form-item style="text-align:  right">
-          <el-button type="primary" @click="createCase">保存</el-button>
-        </el-form-item>
-      </el-form>
+      <CaseView :case-data="caseData" @dialogStatus="handledialogstatus"/>
     </el-dialog>
   </div>
 </template>
@@ -200,6 +117,8 @@
 import common from './common'
 import extraction from './extraction'
 import assertions from './assertions'
+import CaseView from '../../../components/CaseVIew/index'
+
 import JsonViewer from 'vue-json-viewer'
 import { apiinfoTest, apiinfoUpdate } from '../../../api/apiinfo'
 import { getUserId } from '../../../utils/user'
@@ -212,7 +131,7 @@ export default {
       required: true
     }
   },
-  components: { common, JsonViewer, extraction, assertions },
+  components: { common, JsonViewer, extraction, assertions, CaseView },
   data () {
     return {
       methons: this.allEnums.requestMethod,

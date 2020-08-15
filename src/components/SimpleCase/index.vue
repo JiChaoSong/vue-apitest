@@ -45,7 +45,7 @@
         <el-table-column label="#" align="center" width="50px">
           <template slot-scope="scope">{{scope.$index}}</template>
         </el-table-column>
-        <el-table-column label="接口名称" align="center" width="100px">
+        <el-table-column label="接口名称" align="center">
           <template slot-scope="scope">{{scope.row.apiName}}</template>
         </el-table-column>
         <el-table-column label="请求方法" align="center" width="100px">

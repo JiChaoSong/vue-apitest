@@ -124,7 +124,7 @@ export const constantRouterMap = [
             path: 'processcreate',
             name: 'ProcessCreate',
             component: () => import(/* webpackChunkName: "about" */ '../views/processcase/create'),
-            meta: { title: '测试集信息', activeMenu: '/testcase', index: '/testcase/index/process' },
+            meta: { title: '测试集添加', activeMenu: '/testcase', index: '/testcase/index/process' },
             hidden: true
           },
           {
